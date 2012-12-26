@@ -37,7 +37,7 @@ API
 
 ```callback(err, info)```
 
-- ```err``` An if there was one. Otherwise null.
+- ```err``` Error if there was one. Otherwise null.
 - ```info``` properties:
   - ```file```:       The file created if the ```output``` option was set.
   - ```javascript```: The generated JS as a string.
