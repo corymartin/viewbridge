@@ -89,6 +89,19 @@ viewbridge(options, function(err, info) {
 });
 ```
 
+Then in your client code:
+
+```html
+<div id="stats" />
+
+<script src="javascripts/templates.js"></script>
+<script>
+  var statsdiv = document.getElementById('stats');
+  statsdiv.innerHTML =
+    myapp.templates.favorites.stats({ /* data */ });
+</script>
+```
+
 
 CLI
 ---
