@@ -7,16 +7,11 @@ var viewbridge = require('../lib/viewbridge');
 
 var viewsdir  = path.join(__dirname, 'views');
 var deploydir = path.join(__dirname, 'deploy');
+var htmldir   = path.join(__dirname, 'html');
+
+var html = fs.readFileSync(path.join(htmldir, 'viewbridge.html'), 'utf8');
 
 var options01;
-var html = [
-  '<div>'
-, ' <div id="about"/>'
-, ' <div id="status-index"/>'
-, ' <div id="status-time"/>'
-, '</div>'
-].join('\n');
-
 
 /*
  * beforeEach
