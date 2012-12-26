@@ -1,0 +1,7 @@
+h1= title
+ul
+  - if (stats && stats.length)
+    - stats.forEach(function(stat) {
+      li= stat
+    - });
+

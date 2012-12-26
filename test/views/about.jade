@@ -1,0 +1,9 @@
+mixin list(items)
+  ol.items
+    - each i in items
+      li= i
+
+h1 About
+
+- items = ['milk', 'sugar', 'bread']
+mixin list(items)

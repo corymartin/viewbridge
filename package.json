@@ -1,0 +1,29 @@
+{
+  "name": "viewbridge"
+, "version": "0.0.1"
+, "description": "W.I.P. Create precompiled clientside templates from serverside templates."
+, "readmeFilename": "README.md"
+, "license": "MIT"
+, "author": "Cory Martin"
+, "keywords": ["templates", "client", "build tool", "jade"]
+, "main": "index.js"
+, "bin": {
+    "viewbridge": "./bin/viewbridge"
+  }
+, "repository": {
+    "type": "git",
+    "url": "git@github.com:corymartin/viewbridge.git"
+  }
+, "dependencies": {
+    "commander": "~1.1.1"
+  , "jade": "*"
+  , "async": "~0.1.22"
+  }
+, "devDependencies": {
+    "mocha": "~1.7.4"
+  , "jsdom": "~0.3.3"
+  }
+, "engines": {
+    "node": ">= 0.8.x"
+  }
+}
