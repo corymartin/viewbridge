@@ -28,19 +28,19 @@ API
 
 ### viewbridge(options, callback)
 
-```options``` properties:
+`options` properties:
 
-- ```dir```:       Path to root of views/templates directory. __Required__.
-- ```views```:     Views to compile templates functions for. __Required__.
-- ```output```:    JS file to create.
-- ```namespace```: Clientside namespace. Default is ```viewbridge.templates```
+- `dir`:       __Required__. Path to root of views/templates directory.
+- `views`:     Views to compile templates functions for.
+- `output`:    JS file to create.
+- `namespace`: Clientside namespace. Default is ```viewbridge.templates```
 
-```callback(err, info)```
+`callback(err, info)`
 
-- ```err``` Error if there was one. Otherwise null.
-- ```info``` properties:
-  - ```file```:       The file created if the ```output``` option was set.
-  - ```javascript```: The generated JS as a string.
+- `err`  Error if there was one. Otherwise null.
+- `info` properties:
+  - `file`:       The file created if the `output` option was set.
+  - `javascript`: The generated JS as a string.
 
 
 #### Example
@@ -75,7 +75,7 @@ var viewbridge = require('viewbridge');
 
 var options = {
   dir: '~/myapp/src/views'
-, namespace: 'myapp.templates'
+, namespace: 'myapp.tmpl'
 , output: '~/myapp/src/public/javascripts/templates.js'
 , views: [
     'user'
@@ -89,8 +89,6 @@ viewbridge(options, function(err, info) {
 });
 ```
 
-Then in your client code:
-
 ```html
 <div id="stats" />
 
@@ -98,25 +96,45 @@ Then in your client code:
 <script>
   var statsdiv = document.getElementById('stats');
   statsdiv.innerHTML =
-    myapp.templates.favorites.stats({ /* data */ });
+    myapp.tmpl.favorites.stats({ /* data */ });
 </script>
 ```
 
+### Template Attribute
+
+In addition to the `views` option passed to the `viewbridge()` function,
+you can also place a marker in your template to tell Viewbridge to compile
+a clientside function for it.
+
+Example `favorites/stats.jade`:
+
+```js
+//@ viewbridge
+
+h1= title
+
+ul
+  - each val, key in list
+    li #{key} : #{val}
+```
+
+Unbuffered:
+`//-@ viewbridge`
 
 CLI
 ---
 
 ```bash
-Usage: viewbridge [options]
+Usage: viewbridge -d app/views -v v1,v2 -o deploy/tmpl.js [options]
 
 Options:
 
   -h, --help                    output usage information
   -V, --version                 output the version number
   -d, --dir <dir>               directory of template files - required
-  -v, --views <view1,view2,..>  templates to compile - required
-  -o, --output <output>         output file path - required
-  -n, --namespace <namespace>  clientside namespace
+  -v, --views <view1,view2,..>  templates to compile
+  -o, --output <output>         output file path
+  -n, --namespace <namespace>   clientside namespace
 ```
 
 
