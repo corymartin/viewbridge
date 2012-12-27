@@ -9,6 +9,20 @@ As opposed to having separate, yet overlapping templates on both the server and 
 Work in progress.
 Presently [Jade](https://github.com/visionmedia/jade) only.
 
+###### Serverside View File `user/status.jade`
+```jade
+//@ viewbridge
+
+h1= title
+```
+###### On the Client, Having Used Viewbridge
+```html
+<script>
+  var html = viewbridge.user.status({title: 'Hello World'});
+  // html => <h1>Hello World</h1>
+</script>
+```
+
 Installation
 ------------
 
@@ -33,7 +47,7 @@ API
 - `dir`:       __Required__. Path to root of views/templates directory.
 - `views`:     Views to compile templates functions for.
 - `output`:    JS file to create.
-- `namespace`: Clientside namespace. Default is ```viewbridge.templates```
+- `namespace`: Clientside namespace. Default is `viewbridge`
 
 `callback(err, info)`
 
@@ -44,14 +58,11 @@ API
 
 
 #### Example
-Assume an Express app "myapp" with the following directory stucture.
+Assume an Express app *myapp* with the following directory stucture.
 (Express not required; templates can be located anywhere).
 
 ```text
 -myapp/
-  -deploy/
-    -assets/
-      +js/
   -src
     app.js
     +routes/
@@ -69,13 +80,13 @@ Assume an Express app "myapp" with the following directory stucture.
         index.jade
         stats.jade
 ```
-
+###### Node
 ```js
 var viewbridge = require('viewbridge');
 
 var options = {
   dir: '~/myapp/src/views'
-, namespace: 'myapp.tmpl'
+, namespace: 'myapp.templates'
 , output: '~/myapp/src/public/javascripts/templates.js'
 , views: [
     'user'
@@ -88,7 +99,7 @@ viewbridge(options, function(err, info) {
   // ...
 });
 ```
-
+###### Clientside
 ```html
 <div id="stats" />
 
@@ -96,30 +107,30 @@ viewbridge(options, function(err, info) {
 <script>
   var statsdiv = document.getElementById('stats');
   statsdiv.innerHTML =
-    myapp.tmpl.favorites.stats({ /* data */ });
+    myapp.templates.favorites.stats({ /* data */ });
 </script>
 ```
 
 ### Template Attribute
 
 In addition to the `views` option passed to the `viewbridge()` function,
-you can also place a marker in your template to tell Viewbridge to compile
-a clientside function for it.
+you can also place an attribute comment in your template to tell Viewbridge
+to compile a clientside function for it.
 
-Example `favorites/stats.jade`:
+`//@ viewbridge`
+<br>or<br>
+`//-@ viewbridge`
 
-```js
+Example: The following view will have a template function compiled for it.
+
+```jade
 //@ viewbridge
 
 h1= title
-
 ul
   - each val, key in list
     li #{key} : #{val}
 ```
-
-Unbuffered:
-`//-@ viewbridge`
 
 CLI
 ---

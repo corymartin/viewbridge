@@ -16,7 +16,7 @@ program
   .option('-d, --dir <dir>', 'directory of template files - required')
   .option('-v, --views <view1,view2,..>', 'templates to compile', list)
   .option('-o, --output <output>', 'output file path')
-  .option('-n, --namespace <namespace>', 'clientside namespace')
+  .option('-n, --namespace <namespace>', 'clientside namespace - default is `viewbridge`')
   .parse(process.argv);
 
 
