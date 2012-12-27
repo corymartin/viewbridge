@@ -182,7 +182,7 @@ describe('Clientside template functions', function() {
         });
         user.innerHTML += infoHtml;
 
-        var lis = user.querySelectorAll('li');
+        var lis = user.querySelectorAll('ul li');
         assert.equal(lis.length, 3);
         assert.equal(lis[0].innerHTML, 'faves : 7');
         assert.equal(lis[1].innerHTML, 'visits : 23');
