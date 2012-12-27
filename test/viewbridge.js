@@ -138,7 +138,7 @@ describe('JS output file', function() {
 
 
 describe('Clientside template functions', function() {
-  it('should work with passed data', function(done) {
+  it('should work with passed data - Test 01', function(done) {
     viewbridge(options01, function(err, info) {
       jsdom.env(html, [info.file], function(err, window) {
         var doc = window.document;
@@ -156,6 +156,37 @@ describe('Clientside template functions', function() {
         assert.equal(lis[0].innerHTML, 'awesome');
         assert.equal(lis[1].innerHTML, 'super');
         assert.equal(lis[2].innerHTML, 'fantastic');
+        done();
+      });
+    });
+  });
+
+  it('should work with passed data - Test 02', function(done) {
+    viewbridge(options02, function(err, info) {
+      jsdom.env(html, [info.file], function(err, window) {
+        var doc = window.document;
+        var user = doc.getElementById('user');
+        user.innerHTML = window.viewbridge.templates.user.greeting({
+          name: 'Leopold the Noodle'
+        });
+
+        var h1 = user.querySelector('h1');
+        assert.equal(h1.innerHTML, 'Hello Leopold the Noodle!');
+
+        var infoHtml = window.viewbridge.templates.user.account.info({
+          list : {
+            faves: 7
+          , visits: 23
+          , projects: 9
+          }
+        });
+        user.innerHTML += infoHtml;
+
+        var lis = user.querySelectorAll('li');
+        assert.equal(lis.length, 3);
+        assert.equal(lis[0].innerHTML, 'faves : 7');
+        assert.equal(lis[1].innerHTML, 'visits : 23');
+        assert.equal(lis[2].innerHTML, 'projects : 9');
         done();
       });
     });
