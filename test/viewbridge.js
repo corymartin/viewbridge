@@ -100,15 +100,15 @@ describe('JS output file', function() {
       jsdom.env(html, [info.file], function(err, window) {
         assert.equal(info.stats.templateCount, 3);
         assert.doesNotThrow(function() {
-          if ( !window.viewbridge.templates.status.time
-            || !window.viewbridge.templates.user.greeting
-            || !window.viewbridge.templates.user.account.info) {
+          if ( !window.viewbridge.status.time
+            || !window.viewbridge.user.greeting
+            || !window.viewbridge.user.account.info) {
             throw new Error;
           }
         }, Error);
-        assert.equal(typeof window.viewbridge.templates.status.time,       'function');
-        assert.equal(typeof window.viewbridge.templates.user.greeting,     'function');
-        assert.equal(typeof window.viewbridge.templates.user.account.info, 'function');
+        assert.equal(typeof window.viewbridge.status.time,       'function');
+        assert.equal(typeof window.viewbridge.user.greeting,     'function');
+        assert.equal(typeof window.viewbridge.user.account.info, 'function');
         done();
       });
     });
@@ -119,17 +119,17 @@ describe('JS output file', function() {
       jsdom.env(html, [info.file], function(err, window) {
         assert.equal(info.stats.templateCount, 4);
         assert.doesNotThrow(function() {
-          if ( !window.viewbridge.templates.status.time
-            || !window.viewbridge.templates.user.greeting
-            || !window.viewbridge.templates.user.account.info
-            || !window.viewbridge.templates.user.index) {
+          if ( !window.viewbridge.status.time
+            || !window.viewbridge.user.greeting
+            || !window.viewbridge.user.account.info
+            || !window.viewbridge.user.index) {
             throw new Error;
           }
         }, Error);
-        assert.equal(typeof window.viewbridge.templates.status.time,       'function');
-        assert.equal(typeof window.viewbridge.templates.user.greeting,     'function');
-        assert.equal(typeof window.viewbridge.templates.user.account.info, 'function');
-        assert.equal(typeof window.viewbridge.templates.user.index,        'function');
+        assert.equal(typeof window.viewbridge.status.time,       'function');
+        assert.equal(typeof window.viewbridge.user.greeting,     'function');
+        assert.equal(typeof window.viewbridge.user.account.info, 'function');
+        assert.equal(typeof window.viewbridge.user.index,        'function');
         done();
       });
     });
@@ -166,14 +166,14 @@ describe('Clientside template functions', function() {
       jsdom.env(html, [info.file], function(err, window) {
         var doc = window.document;
         var user = doc.getElementById('user');
-        user.innerHTML = window.viewbridge.templates.user.greeting({
+        user.innerHTML = window.viewbridge.user.greeting({
           name: 'Leopold the Noodle'
         });
 
         var h1 = user.querySelector('h1');
         assert.equal(h1.innerHTML, 'Hello Leopold the Noodle!');
 
-        var infoHtml = window.viewbridge.templates.user.account.info({
+        var infoHtml = window.viewbridge.user.account.info({
           list : {
             faves: 7
           , visits: 23
