@@ -12,6 +12,7 @@ var htmldir   = path.join(__dirname, 'html');
 var html = fs.readFileSync(path.join(htmldir, 'viewbridge.html'), 'utf8');
 
 var options01;
+var options02;
 
 /*
  * beforeEach
@@ -22,6 +23,11 @@ beforeEach(function() {
   , views:     ['about', 'status/index', 'status/time']
   , output:    path.join(deploydir, 'tmpl01.js')
   , namespace: 'APP.T'
+  };
+
+  options02 = {
+    dir:       viewsdir
+  , output:    path.join(deploydir, 'tmpl02.js')
   };
 });
 
@@ -64,7 +70,7 @@ describe('JS output file', function() {
     });
   });
 
-  it('should have a template function for each view requested', function(done) {
+  it('should have a template function for each view requested by options', function(done) {
     viewbridge(options01, function(err, info) {
       jsdom.env(html, [info.file], function(err, window) {
         assert.doesNotThrow(function() {
@@ -81,10 +87,24 @@ describe('JS output file', function() {
       });
     });
   });
+
+  it('should have a template function for each view requested by file markers', function(done) {
+    viewbridge(options02, function(err, info) {
+      jsdom.env(html, [info.file], function(err, window) {
+        assert.doesNotThrow(function() {
+          if (!window.viewbridge.templates.status.time) {
+            throw new Error;
+          }
+        }, Error);
+        assert.equal(typeof window.viewbridge.templates.status.time,  'function');
+        done();
+      });
+    });
+  });
 });
 
 
-describe('Template function', function() {
+describe('Clientside template functions', function() {
   it('should work with passed data', function(done) {
     viewbridge(options01, function(err, info) {
       jsdom.env(html, [info.file], function(err, window) {

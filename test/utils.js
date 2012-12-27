@@ -1,6 +1,7 @@
 var assert = require('assert');
 
 var reduceNamespaces = require('../lib/utils').reduceNamespaces;
+var unique           = require('../lib/utils').unique;
 
 
 describe('reduceNamespaces()', function() {
@@ -14,3 +15,15 @@ describe('reduceNamespaces()', function() {
   });
 });
 
+
+describe('unique()', function() {
+  it('should return a new array with duplicates removed from original', function() {
+    var a = ['foo', 'bar', 'zzz', 'bar', 'buz', 'foo', 'foo', 'zzz'];
+    var u = unique(a);
+    assert.equal(u.length, 4);
+    assert.ok(!!~u.indexOf('foo'));
+    assert.ok(!!~u.indexOf('bar'));
+    assert.ok(!!~u.indexOf('zzz'));
+    assert.ok(!!~u.indexOf('buz'));
+  });
+});
