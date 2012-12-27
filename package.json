@@ -18,7 +18,7 @@
     "commander": "~1.1.1"
   , "jade": "*"
   , "async": "~0.1.22"
-  , "async": "~1.4.4"
+  , "wrench": "~1.4.4"
   }
 , "devDependencies": {
     "mocha": "~1.7.4"
