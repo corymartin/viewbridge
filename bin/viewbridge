@@ -14,13 +14,13 @@ program
   .version(pkg.version)
   .usage('-d app/views -v v1,v2 -o deploy/tmpl.js [options]')
   .option('-d, --dir <dir>', 'directory of template files - required')
-  .option('-v, --views <view1,view2,..>', 'templates to compile - required', list)
+  .option('-v, --views <view1,view2,..>', 'templates to compile', list)
   .option('-o, --output <output>', 'output file path')
   .option('-n, --namespace <namespace>', 'clientside namespace')
   .parse(process.argv);
 
 
-if (!program.dir || !program.views) {
+if (!program.dir) {
   console.error('\nError: Required arguments missing.');
   program.help();
   process.exit(1);
