@@ -13,6 +13,7 @@ var html = fs.readFileSync(path.join(htmldir, 'viewbridge.html'), 'utf8');
 
 var options01;
 var options02;
+var options03;
 
 /*
  * beforeEach
@@ -28,6 +29,12 @@ beforeEach(function() {
   options02 = {
     dir:       viewsdir
   , output:    path.join(deploydir, 'tmpl02.js')
+  };
+
+  options03 = {
+    dir:       viewsdir
+  , views:     ['user/index']
+  , output:    path.join(deploydir, 'tmpl03.js')
   };
 });
 
@@ -91,12 +98,38 @@ describe('JS output file', function() {
   it('should have a template function for each view requested by file markers', function(done) {
     viewbridge(options02, function(err, info) {
       jsdom.env(html, [info.file], function(err, window) {
+        assert.equal(info.stats.templateCount, 3);
         assert.doesNotThrow(function() {
-          if (!window.viewbridge.templates.status.time) {
+          if ( !window.viewbridge.templates.status.time
+            || !window.viewbridge.templates.user.greeting
+            || !window.viewbridge.templates.user.account.info) {
             throw new Error;
           }
         }, Error);
-        assert.equal(typeof window.viewbridge.templates.status.time,  'function');
+        assert.equal(typeof window.viewbridge.templates.status.time,       'function');
+        assert.equal(typeof window.viewbridge.templates.user.greeting,     'function');
+        assert.equal(typeof window.viewbridge.templates.user.account.info, 'function');
+        done();
+      });
+    });
+  });
+
+  it('should have a template function for each view requested by options and file markers', function(done) {
+    viewbridge(options03, function(err, info) {
+      jsdom.env(html, [info.file], function(err, window) {
+        assert.equal(info.stats.templateCount, 4);
+        assert.doesNotThrow(function() {
+          if ( !window.viewbridge.templates.status.time
+            || !window.viewbridge.templates.user.greeting
+            || !window.viewbridge.templates.user.account.info
+            || !window.viewbridge.templates.user.index) {
+            throw new Error;
+          }
+        }, Error);
+        assert.equal(typeof window.viewbridge.templates.status.time,       'function');
+        assert.equal(typeof window.viewbridge.templates.user.greeting,     'function');
+        assert.equal(typeof window.viewbridge.templates.user.account.info, 'function');
+        assert.equal(typeof window.viewbridge.templates.user.index,        'function');
         done();
       });
     });
