@@ -94,7 +94,6 @@ describe('viewbridge()', function() {
     });
   });
 
-  /*
   it('should work with jade templates (default)', function(done) {
     var options = {
       dir:    jadedir
@@ -102,7 +101,6 @@ describe('viewbridge()', function() {
     };
     viewbridge(options, baseTest(done));
   });
-  */
 
   it('should work with Hogan templates', function(done) {
     var options = {

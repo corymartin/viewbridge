@@ -17,6 +17,8 @@ program
   .option('-v, --views <view1,view2,..>', 'templates to compile', list)
   .option('-o, --output <output>', 'output file path')
   .option('-n, --namespace <namespace>', 'clientside namespace - default is `viewbridge`')
+  .option('-e, --engine <engine>', 'template engine - default is `jade`')
+  .option('-E, --ext <extension>', 'file extension - defaults are Jade:`.jade`, Hogan:`.hjs`')
   .parse(process.argv);
 
 
@@ -33,6 +35,8 @@ viewbridge(
   , namespace: program.namespace
   , output:    program.output
   , views:     program.views
+  , engine:    program.engine
+  , ext:       program.ext
   }
 , function(err, info) {
     if (err) {
