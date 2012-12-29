@@ -19,7 +19,7 @@ var baseTest = function(done) {
     assert.equal(info.stats.templates[0], 'viewbridge.index');
     jsdom.env('<div id=foo></div>', [info.file], function(err, window) {
       var doc = window.document;
-      assert.ok(!!window.jade);
+      assert.ok(!!window.jade || !!window.Hogan);
       assert.ok(!!window.viewbridge);
       assert.ok(!!window.viewbridge.index);
       assert.equal(typeof window.viewbridge.index, 'function');
@@ -94,6 +94,7 @@ describe('viewbridge()', function() {
     });
   });
 
+  /*
   it('should work with jade templates (default)', function(done) {
     var options = {
       dir:    jadedir
@@ -101,6 +102,7 @@ describe('viewbridge()', function() {
     };
     viewbridge(options, baseTest(done));
   });
+  */
 
   it('should work with Hogan templates', function(done) {
     var options = {
