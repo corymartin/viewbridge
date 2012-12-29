@@ -8,12 +8,44 @@ var viewbridge = require('../lib/viewbridge');
 var viewsdir  = path.join(__dirname, 'views');
 var deploydir = path.join(__dirname, 'deploy');
 var htmldir   = path.join(__dirname, 'html');
+var jadedir   = path.join(__dirname, 'jade');
+var hogandir  = path.join(__dirname, 'hogan');
 
 var html = fs.readFileSync(path.join(htmldir, 'viewbridge.html'), 'utf8');
+
+var baseTest = function(done) {
+  return function(err, info) {
+    assert.equal(info.stats.templateCount, 1);
+    assert.equal(info.stats.templates[0], 'viewbridge.index');
+    jsdom.env('<div id=foo></div>', [info.file], function(err, window) {
+      var doc = window.document;
+      assert.ok(!!window.jade);
+      assert.ok(!!window.viewbridge);
+      assert.ok(!!window.viewbridge.index);
+      assert.equal(typeof window.viewbridge.index, 'function');
+
+      var foo = doc.getElementById('foo');
+      foo.innerHTML = window.viewbridge.index({
+        title: 'Test test'
+      , list: ['uno', 'dos', 'tres']
+      });
+      var h1  = doc.querySelector('h1');
+      var lis = doc.querySelectorAll('li');
+
+      assert.equal(h1.innerHTML, 'Test test');
+      assert.equal(lis.length, 3);
+      assert.equal(lis[0].innerHTML, 'uno');
+      assert.equal(lis[1].innerHTML, 'dos');
+      assert.equal(lis[2].innerHTML, 'tres');
+      done();
+    });
+  };
+};
 
 var options01;
 var options02;
 var options03;
+
 
 /*
  * beforeEach
@@ -60,6 +92,23 @@ describe('viewbridge()', function() {
       assert.ok( fs.existsSync(info.file) );
       done();
     });
+  });
+
+  it('should work with jade templates (default)', function(done) {
+    var options = {
+      dir:    jadedir
+    , output: path.join(deploydir, 'tmpljade.js')
+    };
+    viewbridge(options, baseTest(done));
+  });
+
+  it('should work with Hogan templates', function(done) {
+    var options = {
+      dir:    hogandir
+    , engine: 'hogan'
+    , output: path.join(deploydir, 'tmplhogan.js')
+    };
+    viewbridge(options, baseTest(done));
   });
 });
 
