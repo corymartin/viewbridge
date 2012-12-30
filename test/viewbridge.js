@@ -2,7 +2,7 @@ var assert     = require('assert');
 var fs         = require('fs');
 var path       = require('path');
 var jsdom      = require('jsdom');
-var viewbridge = require('../lib/viewbridge');
+var viewbridge = require('../lib/index');
 
 
 var viewsdir  = path.join(__dirname, 'views');
