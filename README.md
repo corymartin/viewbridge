@@ -1,20 +1,23 @@
 Viewbridge
 ==========
 
-__W.I.P.__ Create precompiled clientside templates from serverside templates.
+__W.I.P.__
 
-Intention is to have one set of templates for both serverside and clientside usage.
-As opposed to having separate, yet overlapping templates on both the server and client.
+Use your serverside views on the client.
+Or just precompile your templates.
 
-Work in progress.
-Presently [Jade](https://github.com/visionmedia/jade) only.
+Only views/templates specified will be compiled and exported.
+
+Supported engines: [Jade], [Hogan]
 
 ###### Serverside View File `user/status.jade`
+
 ```jade
 //@ viewbridge
 
 h1= title
 ```
+
 ###### On the Client, Having Used Viewbridge
 ```html
 <script>
@@ -48,6 +51,9 @@ API
 - `views`:     Views to compile templates functions for.
 - `output`:    JS file to create.
 - `namespace`: Clientside namespace. Default is `viewbridge`
+- `engine`:    Template engine. Default is `jade`.
+- `ext`:       File extension. Defaults are Jade:`.jade`, Hogan:`.hjs`
+
 
 `callback(err, info)`
 
@@ -67,9 +73,9 @@ Assume an Express app *myapp* with the following directory stucture.
     app.js
     +routes/
     -public/
-      +images
-      +javascripts
-      +stylesheets
+      +images/
+      +javascripts/
+      +stylesheets/
     -views/
       about.jade
       index.jade
@@ -87,7 +93,7 @@ var viewbridge = require('viewbridge');
 var options = {
   dir: '~/myapp/src/views'
 , namespace: 'myapp.templates'
-, output: '~/myapp/src/public/javascripts/templates.js'
+, output: '~/myapp/src/public/javascripts/mytemplates.js'
 , views: [
     'user'
   , 'favorites/index' // Must specify index
@@ -103,7 +109,7 @@ viewbridge(options, function(err, info) {
 ```html
 <div id="stats" />
 
-<script src="javascripts/templates.js"></script>
+<script src="javascripts/mytemplates.js"></script>
 <script>
   var statsdiv = document.getElementById('stats');
   statsdiv.innerHTML =
@@ -117,26 +123,38 @@ In addition to the `views` option passed to the `viewbridge()` function,
 you can also place an attribute comment in your template to tell Viewbridge
 to compile a clientside function for it.
 
-`//@ viewbridge`
-<br>or<br>
-`//-@ viewbridge`
-
-Example: The following view will have a template function compiled for it.
+#### Jade
+`//@ viewbridge` or `//-@ viewbridge`
 
 ```jade
 //@ viewbridge
 
 h1= title
 ul
-  - each val, key in list
-    li #{key} : #{val}
+  - each item in list
+    li= item
 ```
+
+#### Hogan (Mustache)
+`{{!@ viewbridge }}`
+
+```html
+{{!@ viewbridge }}
+
+<h1>{{title}}</h1>
+<ul>
+{{#list}}
+  {{.}}
+{{/list}}
+</ul>
+```
+
 
 CLI
 ---
 
 ```bash
-Usage: viewbridge -d app/views -v v1,v2 -o deploy/tmpl.js [options]
+Usage: viewbridge -d app/views [options]
 
 Options:
 
@@ -145,13 +163,18 @@ Options:
   -d, --dir <dir>               directory of template files - required
   -v, --views <view1,view2,..>  templates to compile
   -o, --output <output>         output file path
-  -n, --namespace <namespace>   clientside namespace
+  -n, --namespace <namespace>   clientside namespace - default is `viewbridge`
+  -e, --engine <engine>         template engine - default is `jade`
+  -E, --ext <extension>         file extension - defaults are Jade:`.jade`, Hogan:`.hjs`
 ```
 
 
 Notes
 -----
 
-- Presently Jade only.
-- block, extend, yield, include, etc. do not work clientside.
+- Jade's block, extend, yield, include, etc. do not work clientside.
 - Mixins do work.
+
+
+[Jade]:  https://github.com/visionmedia/jade/ 'Jade'
+[Hogan]: http://twitter.github.com/hogan.js/  'Hogan'

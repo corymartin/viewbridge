@@ -1,6 +1,6 @@
 {
   "name": "viewbridge"
-, "version": "0.0.3"
+, "version": "0.1.0"
 , "description": "W.I.P. Create precompiled clientside templates from serverside templates."
 , "readmeFilename": "README.md"
 , "license": "MIT"
@@ -17,6 +17,7 @@
 , "dependencies": {
     "commander": "~1.1.1"
   , "jade": "*"
+  , "hogan": "~2.0.0"
   , "async": "~0.1.22"
   , "wrench": "~1.4.4"
   }
