@@ -168,12 +168,23 @@ Options:
   -E, --ext <extension>         file extension - defaults are Jade:`.jade`, Hogan:`.hjs`
 ```
 
+Example
+
+```bash
+$ viewbridge -d ~/myapp/src/views \
+             -e hogan \
+             -o ~/myapp/src/public/javascripts/mytemplates.js
+```
+
+Any Hogan templates under `~/myapp/src/views` with attribute comment `{{!@ viewbridge }}`
+will have a precompiled function in `~/myapp/src/public/javascripts/mytemplates.js`
+
 
 Notes
 -----
 
 - Jade's block, extend, yield, include, etc. do not work clientside.
-- Mixins do work.
+- Jade's mixins do work.
 
 
 [Jade]:  https://github.com/visionmedia/jade/ 'Jade'
