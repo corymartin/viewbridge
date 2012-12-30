@@ -19,7 +19,6 @@ var baseTest = function(done) {
     assert.equal(info.stats.templates[0], 'viewbridge.index');
     jsdom.env('<div id=foo></div>', [info.file], function(err, window) {
       var doc = window.document;
-      assert.ok(!!window.jade || !!window.Hogan);
       assert.ok(!!window.viewbridge);
       assert.ok(!!window.viewbridge.index);
       assert.equal(typeof window.viewbridge.index, 'function');
@@ -102,6 +101,19 @@ describe('viewbridge()', function() {
     viewbridge(options, baseTest(done));
   });
 
+  it('should load the Jade runtime in browser', function(done) {
+    var options = {
+      dir: jadedir
+    , output: path.join(deploydir, 'tmpljade.js')
+    };
+    viewbridge(options, function(err, info) {
+      jsdom.env(html, [info.file], function(err, window) {
+        assert.ok(!!window.jade, 'window.jade should be defined');
+        done();
+      });
+    });
+  });
+
   it('should work with Hogan templates', function(done) {
     var options = {
       dir:    hogandir
@@ -109,6 +121,20 @@ describe('viewbridge()', function() {
     , output: path.join(deploydir, 'tmplhogan.js')
     };
     viewbridge(options, baseTest(done));
+  });
+
+  it('should load Hogan lib in browser', function(done) {
+    var options = {
+      dir:    hogandir
+    , engine: 'hogan'
+    , output: path.join(deploydir, 'tmplhogan.js')
+    };
+    viewbridge(options, function(err, info) {
+      jsdom.env(html, [info.file], function(err, window) {
+        assert.ok(!!window.Hogan, 'window.Hogan should be defined');
+        done();
+      });
+    });
   });
 });
 
