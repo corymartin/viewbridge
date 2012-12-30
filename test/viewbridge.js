@@ -19,7 +19,7 @@ var baseTest = function(done) {
     assert.equal(info.stats.templates[0], 'viewbridge.index');
     jsdom.env('<div id=foo></div>', [info.file], function(err, window) {
       var doc = window.document;
-      assert.ok(!!window.viewbridge);
+      assert.ok(!!window.viewbridge, 'root namespace should be defined');
       assert.ok(!!window.viewbridge.index);
       assert.equal(typeof window.viewbridge.index, 'function');
 
