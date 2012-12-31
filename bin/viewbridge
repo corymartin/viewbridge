@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var program    = require('commander');
-var viewbridge = require('../lib/viewbridge');
+var viewbridge = require('../lib/index');
 var pkg        = require('../package');
 
 
