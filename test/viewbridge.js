@@ -52,6 +52,7 @@ var options03;
 beforeEach(function() {
   options01 = {
     dir:       viewsdir
+  , engine:    'jade'
   , views:     ['about', 'status/index', 'status/time']
   , output:    path.join(deploydir, 'tmpl01.js')
   , namespace: 'APP.T'
@@ -59,11 +60,13 @@ beforeEach(function() {
 
   options02 = {
     dir:       viewsdir
+  , engine:    'jade'
   , output:    path.join(deploydir, 'tmpl02.js')
   };
 
   options03 = {
     dir:       viewsdir
+  , engine:    'jade'
   , views:     ['user/index']
   , output:    path.join(deploydir, 'tmpl03.js')
   };
@@ -96,6 +99,7 @@ describe('viewbridge()', function() {
   it('should work with jade templates (default)', function(done) {
     var options = {
       dir:    jadedir
+    , engine: 'jade'
     , output: path.join(deploydir, 'tmpljade.js')
     };
     viewbridge(options, baseTest(done));
@@ -104,6 +108,7 @@ describe('viewbridge()', function() {
   it('should load the Jade runtime in browser', function(done) {
     var options = {
       dir: jadedir
+    , engine: 'jade'
     , output: path.join(deploydir, 'tmpljade.js')
     };
     viewbridge(options, function(err, info) {

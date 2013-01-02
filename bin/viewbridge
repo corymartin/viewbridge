@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
+var path       = require('path');
 var program    = require('commander');
+var watch      = require('watch');
 var viewbridge = require('../lib/index');
+var ENGINES    = require('../lib/engines');
 var pkg        = require('../package');
 
 
@@ -12,40 +15,86 @@ function list(str) {
 
 program
   .version(pkg.version)
-  .usage('-d app/views -v v1,v2 -o deploy/tmpl.js [options]')
-  .option('-d, --dir <dir>', 'directory of template files - required')
-  .option('-v, --views <view1,view2,..>', 'templates to compile', list)
-  .option('-o, --output <output>', 'output file path')
-  .option('-n, --namespace <namespace>', 'clientside namespace - default is `viewbridge`')
-  .option('-e, --engine <engine>', 'template engine - default is `jade`')
-  .option('-E, --ext <extension>', 'file extension - defaults are Jade:`.jade`, Hogan:`.hjs`')
+  .usage('--dir app/views [options]')
+  .option('-d, --dir <dir>',              'Directory of template files. Required.')
+  .option('-e, --engine <engine>',        'Template engine. Required.')
+  .option('-v, --views <view1,view2,..>', 'Templates to compile.', list)
+  .option('-o, --output <output>',        'Output file path.')
+  .option('-n, --namespace <namespace>',  'Clientside namespace. Default is `viewbridge`', 'viewbridge')
+  .option('-E, --ext <extension>',        'File extension of view files.')
+  .option('-w, --watch',                  'Compile templates when files change.')
   .parse(process.argv);
 
 
+// Views dir is required
 if (!program.dir) {
-  console.error('\nError: Required arguments missing.');
+  console.error('\nError: Required argument missing: dir');
   program.help();
   process.exit(1);
 }
-
-
-viewbridge(
-  {
-    dir:       program.dir
-  , namespace: program.namespace
-  , output:    program.output
-  , views:     program.views
-  , engine:    program.engine
-  , ext:       program.ext
+// Engine is required
+if (!program.engine) {
+  console.error('\nError: Required argument missing: engine');
+  program.help();
+  process.exit(1);
+}
+else {
+  if (!ENGINES.isSupported(program.engine)) {
+    console.error('\nError: Engine not supported: %s', program.engine);
+    program.help();
+    process.exit(1);
   }
-, function(err, info) {
-    if (err) {
-      console.error('\nError:\n', err);
-      process.exit(1);
+}
+
+
+var filterTemplates = (function() {
+  var ext = program.ext || ENGINES[program.engine].ext;
+  return function(filename) {
+    return path.extname(filename).toLowerCase() !== ext;
+  }
+})();
+
+
+/*
+ * Call Viewbridge
+ */
+if (!program.watch) {
+  callViewbridge();
+}
+else {
+  /*
+   * Watch
+   */
+  var watchOptions = {
+    ignoreDotFiles: true
+  , filter:         filterTemplates
+  , persistent:     true
+  , interval:       500
+  };
+  console.info('Viewbridge watching %s', program.dir);
+  watch.watchTree(program.dir, watchOptions, callViewbridge);
+}
+
+
+function callViewbridge() {
+  viewbridge(
+    {
+      dir:       program.dir
+    , namespace: program.namespace
+    , output:    program.output
+    , views:     program.views
+    , engine:    program.engine
+    , ext:       program.ext
     }
-    if (program.output)
-      console.info(info.file);
-    else
-      console.log(info.javascript);
-  }
-);
+  , function(err, info) {
+      if (err) {
+        console.error('\nError:\n', err);
+        process.exit(1);
+      }
+      if (program.output)
+        console.info(info.file);
+      else
+        console.log(info.javascript);
+    }
+  );
+};
