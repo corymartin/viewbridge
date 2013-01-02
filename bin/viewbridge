@@ -16,7 +16,7 @@ function list(str) {
 program
   .version(pkg.version)
   .usage('--dir app/views [options]')
-  .option('-d, --dir <dir>',              'Directory of template files. Required.')
+  .option('-d, --dir <dir>',              'Directory of template files. Default is pwd.', process.cwd())
   .option('-e, --engine <engine>',        'Template engine. Required.')
   .option('-v, --views <view1,view2,..>', 'Templates to compile.', list)
   .option('-o, --output <output>',        'Output file path.')
@@ -26,24 +26,16 @@ program
   .parse(process.argv);
 
 
-// Views dir is required
-if (!program.dir) {
-  console.error('\nError: Required argument missing: dir');
-  program.help();
-  process.exit(1);
-}
 // Engine is required
 if (!program.engine) {
   console.error('\nError: Required argument missing: engine');
   program.help();
   process.exit(1);
 }
-else {
-  if (!ENGINES.isSupported(program.engine)) {
-    console.error('\nError: Engine not supported: %s', program.engine);
-    program.help();
-    process.exit(1);
-  }
+else if (!ENGINES.isSupported(program.engine)) {
+  console.error('\nError: Engine not supported: %s', program.engine);
+  program.help();
+  process.exit(1);
 }
 
 
