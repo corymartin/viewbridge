@@ -41,6 +41,20 @@ describe('STDOUT', function() {
       done();
     });
   });
+
+  it('should be the JS when successful and no --output option is passed', function(done) {
+    exec('bin/viewbridge -e hogan', function(err, stdout, stderr) {
+      assert.equal(err, null);
+      jsdom.env({
+        html: html
+      , src: [stdout.trim()]
+      , done: function(err, window) {
+        assert.ok(window.Hogan);
+        done();
+        }
+      });
+    });
+  });
 });
 
 
