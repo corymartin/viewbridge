@@ -1,7 +1,7 @@
 {{!@ viewbridge }}
 
 <h1>{{title}}</h1>
-<h2>index.hjs</h2>
+<h2>index.hogan</h2>
 
 <ul>
   {{#list}}

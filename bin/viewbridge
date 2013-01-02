@@ -16,8 +16,8 @@ function list(str) {
 program
   .version(pkg.version)
   .usage('--dir app/views [options]')
-  .option('-d, --dir <dir>',              'Directory of template files. Default is pwd.', process.cwd())
   .option('-e, --engine <engine>',        'Template engine. Required.')
+  .option('-d, --dir <dir>',              'Directory of template files. Default is pwd.', process.cwd())
   .option('-v, --views <view1,view2,..>', 'Templates to compile.', list)
   .option('-o, --output <output>',        'Output file path.')
   .option('-n, --namespace <namespace>',  'Clientside namespace. Default is `viewbridge`', 'viewbridge')
