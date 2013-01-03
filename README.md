@@ -62,7 +62,7 @@ Options:
   -V, --version                 output the version number
   -e, --engine <engine>         Template engine. Required.
   -d, --dir <dir>               Directory of view files. Default is current directory.
-  -v, --views <view1,view2,..>  Templates to compile.
+  -v, --views <view1,view2,..>  Views to compile.
   -o, --output <output>         Output file path.
   -n, --namespace <namespace>   Clientside namespace. Default is `viewbridge`
   -E, --ext <extension>         File extension of view files.
@@ -79,6 +79,9 @@ API
 ```bash
 $ npm install viewbridge
 ```
+```javascript
+var viewbridge = require('viewbridge');
+```
 
 ### viewbridge(options, callback)
 
@@ -86,23 +89,23 @@ $ npm install viewbridge
 
 - `engine`:    __Required__. Template engine.
     - `jade`, `hogan`
-- `dir`:       Path to root of views/templates directory.
-- `views`:     Array of views to compile functions for. See example below.
+- `dir`:       Path to root of views/templates directory. Default is current
+               working directory.
+- `views`:     Array of views to compile functions for.
+               This option can be used instead of or in addtion to Viewbridge attribute comments.
 - `output`:    JS file to create.
 - `namespace`: Clientside namespace. Default is `viewbridge`. No limit on how deep it
                can go (eg `myapp.foo.templates`). Checks to see if a namespace exists
                before creating a new one.
-- `ext`:       File extension. Defaults are Jade:`.jade`, Hogan:`.hjs`
+- `ext`:       File extension. Defaults are Jade:`.jade`, Hogan:`.html`
 
 
 `callback(err, info)`
 
 - `err`  Error if there was one. Otherwise null.
 - `info` properties:
-  - `file`:       The file created if the `output` option was set.
-  - `javascript`: The generated JS as a string.
-
-The `views` option can be used instead of or in addtion to Viewbridge attribute comments.
+    - `file`:       The file created if the `output` option was set.
+    - `javascript`: The generated JS as a string.
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -125,6 +128,7 @@ in either the CLI app or the exposed function.
 Examples
 --------
 Assume the following directory structure and files for the following examples.
+(Vanilla [Express](http://expressjs.com/) app)
 
 ```text
 -myapp/
@@ -145,20 +149,23 @@ Assume the following directory structure and files for the following examples.
       stats.jade
 ```
 
+#### CLI
 
 ```bash
 $ viewbridge --dir ~/myapp/views \
              --engine hogan \
+             --ext .hjs \
              --output ~/myapp/public/javascripts/mytemplates.js \
              --watch
 ```
 
-Any Hogan templates under `~/myapp/views` with attribute comment `{{!@ viewbridge }}`
-will have a precompiled function in `~/myapp/public/javascripts/mytemplates.js`
+Any Hogan templates under `~/myapp/views` with an extension of `.hjs` and an
+attribute comment `{{!@ viewbridge }}` will have a precompiled function made
+for it in `~/myapp/public/javascripts/mytemplates.js`.
+The output file will be updated as changes are made under the views directory.
 
-The `--views` option can be used instead of or in addtion to Viewbridge attribute comments.
 
-#### Example
+#### API
 
 Node.js
 
@@ -167,6 +174,7 @@ var viewbridge = require('viewbridge');
 
 var options = {
   dir: '~/myapp/views'
+, engine: 'jade'
 , namespace: 'myapp.templates'
 , output: '~/myapp/public/javascripts/mytemplates.js'
 , views: [
@@ -186,9 +194,11 @@ Browser
 ```html
 <script src="javascripts/mytemplates.js"></script>
 <script>
-  typeof myapp.templates.user             // 'function'
-  typeof myapp.templates.favorites.index  // 'function'
-  typeof myapp.templates.favorites.stats  // 'function'
+  myapp.templates.user({ /*..data..*/ });
+
+  myapp.templates.favorites.index({ /*..data..*/ });
+
+  myapp.templates.favorites.stats({ /*..data..*/ });
 </script>
 ```
 

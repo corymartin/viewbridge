@@ -19,7 +19,7 @@ program
   .usage('--engine engine_name [options]')
   .option('-e, --engine <engine>',        'Template engine. Required.')
   .option('-d, --dir <dir>',              'Directory of view files. Default is current directory.', process.cwd())
-  .option('-v, --views <view1,view2,..>', 'Templates to compile.', list)
+  .option('-v, --views <view1,view2,..>', 'Views to compile.', list)
   .option('-o, --output <output>',        'Output file path.')
   .option('-n, --namespace <namespace>',  'Clientside namespace. Default is `viewbridge`', 'viewbridge')
   .option('-E, --ext <extension>',        'File extension of view files.')
@@ -60,12 +60,17 @@ else {
   var isExt = function(file) {
     return path.extname(file).toLowerCase() === ext;
   };
-
-  console.info('Viewbridge watching dir: '.green, program.dir.underline);
-  watch.watchTree(program.dir, watchOptions, function(file, curr, prev) {
+  var onTreeChange = function(file) {
     if (! isExt(file)) return;
-    console.info('\nChange detected: '.green, file.grey.underline);
+    console.info('\nChange detected: %s'.green, file.grey.underline);
     callViewbridge();
+  };
+
+  console.info('Viewbridge watching dir: %s'.green, program.dir.grey.underline);
+  watch.createMonitor(program.dir, watchOptions, function(monitor) {
+    monitor.on('created', onTreeChange);
+    monitor.on('changed', onTreeChange);
+    monitor.on('removed', onTreeChange);
   });
 }
 
@@ -85,10 +90,13 @@ function callViewbridge() {
         console.error('\nError:\n %s'.red, err);
         process.exit(1);
       }
-      if (program.output)
+
+      if (program.output) {
         console.info(info.file);
-      else
+      }
+      else {
         console.log(info.javascript);
+      }
     }
   );
 };

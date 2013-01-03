@@ -175,7 +175,7 @@ describe('JS output file', function() {
     });
   });
 
-  it('should have a template function for each view requested by file markers', function(done) {
+  it('should have a template function for each view requested by Viewbridge attributes', function(done) {
     viewbridge(options02, function(err, info) {
       jsdom.env(html, [info.file], function(err, window) {
         assert.equal(info.stats.templateCount, 3);
@@ -194,7 +194,7 @@ describe('JS output file', function() {
     });
   });
 
-  it('should have a template function for each view requested by options and file markers', function(done) {
+  it('should have a template function for each view requested by options and Viewbridge attributes', function(done) {
     viewbridge(options03, function(err, info) {
       jsdom.env(html, [info.file], function(err, window) {
         assert.equal(info.stats.templateCount, 4);
