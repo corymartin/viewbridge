@@ -5,7 +5,7 @@
 , "readmeFilename": "README.md"
 , "license": "MIT"
 , "author": "Cory Martin"
-, "keywords": ["templates", "client", "build tool", "jade"]
+, "keywords": ["templates", "templating", "views", "client", "build tool"]
 , "main": "index.js"
 , "bin": {
     "viewbridge": "./bin/viewbridge"
