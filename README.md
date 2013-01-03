@@ -1,7 +1,8 @@
 Viewbridge
 ==========
 
-__W.I.P.__
+Work in progress
+-----
 
 Use your serverside views on the client.
 Or just precompile your templates.
