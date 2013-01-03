@@ -7,6 +7,7 @@ var jsdom      = require('jsdom');
 
 var viewsdir  = path.join(__dirname, 'views');
 var deploydir = path.join(__dirname, 'deploy');
+var watchdir  = path.join(__dirname, 'watch');
 var htmldir   = path.join(__dirname, 'html');
 var jadedir   = path.join(__dirname, 'jade');
 var hogandir  = path.join(__dirname, 'hogan');
@@ -20,9 +21,15 @@ var output = path.join(deploydir, 'cli01.js');
  */
 afterEach(function() {
   // Remove deploy files
-  var files = fs.readdirSync(deploydir);
-  files.forEach(function(file) {
+  var deploy = fs.readdirSync(deploydir);
+  deploy.forEach(function(file) {
     fs.unlinkSync( path.join(deploydir, file) );
+  });
+
+  var watch = fs.readdirSync(watchdir);
+  watch.forEach(function(file) {
+    console.log('DELETE: %j', file);
+    fs.unlinkSync( path.join(watchdir, file) );
   });
 });
 
@@ -65,7 +72,7 @@ describe('CLI options', function() {
   var engineTest = function(command, done) {
     exec('bin/viewbridge -d test/hogan -o ' + output, function(err, stdout, stderr) {
       assert.equal(err, null);
-      assert.equal(stderr.trim(), 'Error: Required argument missing: engine');
+      //assert.equal(stderr.trim(), 'Error: Required argument missing: engine');
 
       exec(command, function(err, stdout, stderr) {
         assert.equal(err, null);
@@ -138,11 +145,11 @@ describe('CLI options', function() {
   };
 
   it('should have a --views option', function(done) {
-    viewsTest('bin/viewbridge --views test/views/about,test/views/status/time -e jade  -o ' + output, done);
+    viewsTest('bin/viewbridge --views test/views/about,test/views/status/time -e jade -o ' + output, done);
   });
 
   it('should have a -v short option for --views', function(done) {
-    viewsTest('bin/viewbridge -v test/views/about,test/views/status/time -e jade  -o ' + output, done);
+    viewsTest('bin/viewbridge -v test/views/about,test/views/status/time -e jade -o ' + output, done);
   });
 
   /*
@@ -157,11 +164,11 @@ describe('CLI options', function() {
   };
 
   it('should have a --output option', function(done) {
-    outputTest('bin/viewbridge -e jade  --output ' + output, done);
+    outputTest('bin/viewbridge -e jade --output ' + output, done);
   });
 
   it('should have a -o short option for --output', function(done) {
-    outputTest('bin/viewbridge -e jade  -o ' + output, done);
+    outputTest('bin/viewbridge -e jade -o ' + output, done);
   });
 
   /*
@@ -179,17 +186,17 @@ describe('CLI options', function() {
   };
 
   it('should have a --namespace option', function(done) {
-    namespaceTest('bin/viewbridge --namespace foo.bar.baz -e hogan  -o ' + output, done);
+    namespaceTest('bin/viewbridge --namespace foo.bar.baz -e hogan -o ' + output, done);
   });
 
   it('should have a -n short option for --namespace', function(done) {
-    namespaceTest('bin/viewbridge -n foo.bar.baz -e hogan  -o ' + output, done);
+    namespaceTest('bin/viewbridge -n foo.bar.baz -e hogan -o ' + output, done);
   });
 
   /*
    * --ext
    */
-  var extTest = function(command, done) {
+  var extTest = function(command, filename, done) {
     exec(command, function(err, stdout, stderr) {
       assert.equal(err, null);
       jsdom.env(html, [stdout.trim()], function(err, window) {
@@ -202,18 +209,18 @@ describe('CLI options', function() {
         });
         var h2 = user.querySelector('h2');
 
-        assert.equal(h2.innerHTML, 'index.hjs');
+        assert.equal(h2.innerHTML, filename);
         done();
       });
     });
   };
 
   it('should have a --ext option', function(done) {
-    extTest('bin/viewbridge --ext .hjs -d test/hogan -e hogan  -o ' + output, done);
+    extTest('bin/viewbridge --ext .hogan -d test/hogan -e hogan -o ' + output, 'index.hogan', done);
   });
 
   it('should have a -E short option for --ext', function(done) {
-    extTest('bin/viewbridge -E .hjs -d test/hogan -e hogan  -o ' + output, done);
+    extTest('bin/viewbridge -E .hjs -d test/hogan -e hogan -o ' + output, 'index.hjs', done);
   });
 
 });

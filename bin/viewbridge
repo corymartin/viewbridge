@@ -3,6 +3,7 @@
 var path       = require('path');
 var program    = require('commander');
 var watch      = require('watch');
+var colors     = require('colors');
 var viewbridge = require('../lib/index');
 var ENGINES    = require('../lib/engines');
 var pkg        = require('../package');
@@ -15,9 +16,9 @@ function list(str) {
 
 program
   .version(pkg.version)
-  .usage('--dir app/views [options]')
+  .usage('--engine engine_name [options]')
   .option('-e, --engine <engine>',        'Template engine. Required.')
-  .option('-d, --dir <dir>',              'Directory of template files. Default is pwd.', process.cwd())
+  .option('-d, --dir <dir>',              'Directory of view files. Default is current directory.', process.cwd())
   .option('-v, --views <view1,view2,..>', 'Templates to compile.', list)
   .option('-o, --output <output>',        'Output file path.')
   .option('-n, --namespace <namespace>',  'Clientside namespace. Default is `viewbridge`', 'viewbridge')
@@ -28,23 +29,15 @@ program
 
 // Engine is required
 if (!program.engine) {
-  console.error('\nError: Required argument missing: engine');
+  console.error('\nError: Required argument missing: engine'.red);
   program.help();
   process.exit(1);
 }
 else if (!ENGINES.isSupported(program.engine)) {
-  console.error('\nError: Engine not supported: %s', program.engine);
+  console.error('\nError: Engine not supported: %s'.red, program.engine);
   program.help();
   process.exit(1);
 }
-
-
-var filterTemplates = (function() {
-  var ext = program.ext || ENGINES[program.engine].ext;
-  return function(filename) {
-    return path.extname(filename).toLowerCase() !== ext;
-  }
-})();
 
 
 /*
@@ -59,12 +52,21 @@ else {
    */
   var watchOptions = {
     ignoreDotFiles: true
-  , filter:         filterTemplates
   , persistent:     true
   , interval:       500
   };
-  console.info('Viewbridge watching %s', program.dir);
-  watch.watchTree(program.dir, watchOptions, callViewbridge);
+  var ext = program.ext || ENGINES[program.engine].ext;
+  ext = ext.toLowerCase();
+  var isExt = function(file) {
+    return path.extname(file).toLowerCase() === ext;
+  };
+
+  console.info('Viewbridge watching dir: '.green, program.dir.underline);
+  watch.watchTree(program.dir, watchOptions, function(file, curr, prev) {
+    if (! isExt(file)) return;
+    console.info('\nChange detected: '.green, file.grey.underline);
+    callViewbridge();
+  });
 }
 
 
@@ -80,7 +82,7 @@ function callViewbridge() {
     }
   , function(err, info) {
       if (err) {
-        console.error('\nError:\n', err);
+        console.error('\nError:\n %s'.red, err);
         process.exit(1);
       }
       if (program.output)

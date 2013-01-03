@@ -14,7 +14,7 @@ Engines currently supported:
 
 #### Serverside View File
 The attribute comment tells Viewbridge to precompile a clientside function for this view.
-`~/myapp/views/user/status.jade`
+`views/user/status.jade`
 
 ```jade
 //@ viewbridge
@@ -26,7 +26,7 @@ h1= title
 There is a `--watch` option for development.
 
 ```bash
-$ viewbridge --dir myapp/views --engine jade --output myapp/assets/js/templates.js --watch
+$ viewbridge --engine jade --output assets/js/templates.js --watch
 ```
 
 #### In the Browser
@@ -43,7 +43,7 @@ The template function's namespace will mimic its serverside path.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Viewbridge Command Line Application
-------------------------
+-----------------------------------
 
 ### Install
 
@@ -54,33 +54,20 @@ $ npm install -g viewbridge
 ### Usage
 
 ```bash
-Usage: viewbridge -d my/views/dir [options]
+Usage: viewbridge --engine engine_name [options]
 
 Options:
 
   -h, --help                    output usage information
   -V, --version                 output the version number
-  -d, --dir <dir>               required - directory of template files
-  -e, --engine <engine>         required - template engine
-  -o, --output <output>         output file path
-  -v, --views <view1,view2,..>  templates to compile
-  -n, --namespace <namespace>   clientside namespace - default is `viewbridge`
-  -E, --ext <extension>         file extension - defaults are Jade:`.jade`, Hogan:`.hjs`
-  -w, --watch                   compiles templates when files change
+  -e, --engine <engine>         Template engine. Required.
+  -d, --dir <dir>               Directory of view files. Default is current directory.
+  -v, --views <view1,view2,..>  Templates to compile.
+  -o, --output <output>         Output file path.
+  -n, --namespace <namespace>   Clientside namespace. Default is `viewbridge`
+  -E, --ext <extension>         File extension of view files.
+  -w, --watch                   Compile templates when files change.
 ```
-
-Example
-
-```bash
-$ viewbridge -d ~/myapp/views \
-             -e hogan \
-             -o ~/myapp/public/javascripts/mytemplates.js
-```
-
-Any Hogan templates under `~/myapp/views` with attribute comment `{{!@ viewbridge }}`
-will have a precompiled function in `~/myapp/public/javascripts/mytemplates.js`
-
-The `--views` option can be used instead of or in addtion to Viewbridge attribute comments.
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -97,9 +84,9 @@ $ npm install viewbridge
 
 `options` properties:
 
-- `dir`:       __Required__. Path to root of views/templates directory.
 - `engine`:    __Required__. Template engine.
     - `jade`, `hogan`
+- `dir`:       Path to root of views/templates directory.
 - `views`:     Array of views to compile functions for. See example below.
 - `output`:    JS file to create.
 - `namespace`: Clientside namespace. Default is `viewbridge`. No limit on how deep it
@@ -117,7 +104,27 @@ $ npm install viewbridge
 
 The `views` option can be used instead of or in addtion to Viewbridge attribute comments.
 
-#### Example
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Viewbridge Attribute Comments
+-----------------------------
+Placing an attribute comment in your template to tell Viewbridge
+to compile a clientside function for it.
+
+Viewbridge will also create templates for views specifed by the `views` option
+in either the CLI app or the exposed function.
+
+### Jade
+`//@ viewbridge` or `//-@ viewbridge`
+
+### Hogan (Mustache)
+`{{!@ viewbridge }}`
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Examples
+--------
+Assume the following directory structure and files for the following examples.
 
 ```text
 -myapp/
@@ -137,6 +144,21 @@ The `views` option can be used instead of or in addtion to Viewbridge attribute 
       index.jade
       stats.jade
 ```
+
+
+```bash
+$ viewbridge --dir ~/myapp/views \
+             --engine hogan \
+             --output ~/myapp/public/javascripts/mytemplates.js \
+             --watch
+```
+
+Any Hogan templates under `~/myapp/views` with attribute comment `{{!@ viewbridge }}`
+will have a precompiled function in `~/myapp/public/javascripts/mytemplates.js`
+
+The `--views` option can be used instead of or in addtion to Viewbridge attribute comments.
+
+#### Example
 
 Node.js
 
@@ -169,22 +191,6 @@ Browser
   typeof myapp.templates.favorites.stats  // 'function'
 </script>
 ```
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-Viewbridge Attribute Comments
------------------------------
-Placing an attribute comment in your template to tell Viewbridge
-to compile a clientside function for it.
-
-Viewbridge will also create templates for views specifed by the `views` option
-in either the CLI app or the exposed function.
-
-### Jade
-`//@ viewbridge` or `//-@ viewbridge`
-
-### Hogan (Mustache)
-`{{!@ viewbridge }}`
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
