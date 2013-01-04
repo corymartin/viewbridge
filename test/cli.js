@@ -56,8 +56,8 @@ describe('STDOUT', function() {
         html: html
       , src: [stdout.trim()]
       , done: function(err, window) {
-        assert.ok(window.Hogan);
-        done();
+          assert.ok(window.Hogan);
+          done();
         }
       });
     });
