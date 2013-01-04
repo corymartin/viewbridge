@@ -66,7 +66,8 @@ Options:
   -v, --views <view1,view2,..>  Views to compile.
   -o, --output <output>         Output file path.
   -n, --namespace <namespace>   Clientside namespace. Default is `viewbridge`
-  -E, --ext <extension>         File extension of view files.
+  -x, --ext <extension>         File extension of view files.
+  -R, --no-runtime              Do not include the engine's runtime.
   -w, --watch                   Compile templates when files change.
 ```
 
@@ -99,6 +100,8 @@ var viewbridge = require('viewbridge');
                can go (eg `myapp.foo.templates`). Checks to see if a namespace exists
                before creating a new one.
 - `ext`:       File extension. Defaults are Jade:`.jade`, Hogan:`.html`
+- `runtime`:   Include the template engines runtime JS. Default is `true`.
+               If `false` you will have to include it yourself separately.
 
 
 `callback(err, info)`

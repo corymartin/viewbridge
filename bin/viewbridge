@@ -22,7 +22,8 @@ program
   .option('-v, --views <view1,view2,..>', 'Views to compile.', list)
   .option('-o, --output <output>',        'Output file path.')
   .option('-n, --namespace <namespace>',  'Clientside namespace. Default is `viewbridge`', 'viewbridge')
-  .option('-E, --ext <extension>',        'File extension of view files.')
+  .option('-x, --ext <extension>',        'File extension of view files.')
+  .option('-R, --no-runtime',             'Do not include the engine\'s runtime.')
   .option('-w, --watch',                  'Compile templates when files change.')
   .parse(process.argv);
 
@@ -84,6 +85,7 @@ function callViewbridge() {
     , views:     program.views
     , engine:    program.engine
     , ext:       program.ext
+    , runtime:   program.runtime
     }
   , function(err, info) {
       if (err) {

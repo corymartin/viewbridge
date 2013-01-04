@@ -219,8 +219,30 @@ describe('CLI options', function() {
     extTest('bin/viewbridge --ext .hogan -d test/hogan -e hogan -o ' + output, 'index.hogan', done);
   });
 
-  it('should have a -E short option for --ext', function(done) {
-    extTest('bin/viewbridge -E .hjs -d test/hogan -e hogan -o ' + output, 'index.hjs', done);
+  it('should have a -x short option for --ext', function(done) {
+    extTest('bin/viewbridge -x .hjs -d test/hogan -e hogan -o ' + output, 'index.hjs', done);
+  });
+
+  /*
+   * --no-runtime
+   */
+  var runtimeTest = function(command, runtime, done) {
+    exec(command, function(err, stdout, stderr) {
+      assert.equal(err, null);
+      jsdom.env(html, [stdout.trim()], function(err, window) {
+        assert.ok(window.viewbridge);
+        assert.ok(! window[runtime]);
+        done();
+      });
+    });
+  };
+
+  it('should have a --no-runtime option', function(done) {
+    runtimeTest('bin/viewbridge --no-runtime -e hogan -o ' + output, 'Hogan', done);
+  });
+
+  it('should have a -R short option for --no-runtime', function(done) {
+    runtimeTest('bin/viewbridge -R -e jade -o ' + output, 'jade', done);
   });
 
 });
