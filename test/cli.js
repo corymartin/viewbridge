@@ -152,10 +152,14 @@ describe('CLI options', function() {
   });
 
   /*
-  it('should `*` be passed all templates will be compiled/exported', function(done) {
-    exec('bin/viewbridge -v * -d test/jade -e jade -o ' + output, function(err, stdout, stderr) {
+   * --all-views
+   */
+  it('should compile all views with --all-views', function(done) {
+    exec('bin/viewbridge --all-views -d test/jade -e jade -o ' + output, function(err, stdout, stderr) {
       assert.equal(err, null);
       jsdom.env(html, [stdout.trim()], function(err, window) {
+        assert.ok(window.viewbridge);
+        assert.equal(Object.keys(window.viewbridge).length, 3);
         assert.equal(typeof window.viewbridge.a,     'function');
         assert.equal(typeof window.viewbridge.b,     'function');
         assert.equal(typeof window.viewbridge.index, 'function');
@@ -163,7 +167,6 @@ describe('CLI options', function() {
       });
     });
   });
-  */
 
   /*
    * --output

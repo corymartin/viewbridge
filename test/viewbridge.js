@@ -248,32 +248,21 @@ describe('Clientside template functions', function() {
 
 
 describe('Options', function() {
-  it('should compile all templates with views:*', function(done) {
+  it('should compile all templates with allviews:true', function(done) {
     var opts = {
-      views:  '*'
-    , dir:    jadedir
-    , engine: 'jade'
-    , output: path.join(deploydir, 'tmpl-all-views.js')
+      allviews: true
+    , dir:      jadedir
+    , engine:   'jade'
+    , output:   path.join(deploydir, 'tmpl-all-views.js')
     };
     viewbridge(opts, function(err, info) {
-      console.log();
-      console.log(err);
-      console.log();
+      assert.equal(err, null);
       jsdom.env('<div id=foo></div>', [info.file], function(err, window) {
-        console.log(window.viewbridge);
-        return done();
-        var doc = window.document;
-        var about = doc.getElementById('about');
-        about.innerHTML = window.APP.T.about();
-
-        var list = about.querySelector('ol.items')
-        assert.equal(list.className, 'items');
-
-        var lis = list.getElementsByTagName('li');
-        assert.equal(lis.length, 3);
-        assert.equal(lis[0].innerHTML, 'milk');
-        assert.equal(lis[1].innerHTML, 'sugar');
-        assert.equal(lis[2].innerHTML, 'bread');
+        assert.ok(window.viewbridge);
+        assert.equal(Object.keys(window.viewbridge).length, 3);
+        assert.equal(typeof window.viewbridge.a,     'function');
+        assert.equal(typeof window.viewbridge.b,     'function');
+        assert.equal(typeof window.viewbridge.index, 'function');
         done();
       });
     });
