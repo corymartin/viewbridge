@@ -5,7 +5,7 @@ var program    = require('commander');
 var watch      = require('watch');
 var colors     = require('colors');
 var viewbridge = require('../lib/index');
-var ENGINES    = require('../lib/engines');
+var engines    = require('../lib/engines');
 var pkg        = require('../package.json');
 
 
@@ -35,7 +35,7 @@ if (!program.engine) {
   program.help();
   process.exit(1);
 }
-else if (!ENGINES.isSupported(program.engine)) {
+else if (!engines.isSupported(program.engine)) {
   console.error('\nError: Engine not supported: %s'.red, program.engine);
   program.help();
   process.exit(1);
@@ -57,7 +57,7 @@ else {
   , persistent:     true
   , interval:       500
   };
-  var ext = program.ext || ENGINES[program.engine].ext;
+  var ext = program.ext || engines.ENGINE[program.engine].ext;
   ext = ext.toLowerCase();
   var isExt = function(file) {
     return path.extname(file).toLowerCase() === ext;

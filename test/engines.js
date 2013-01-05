@@ -1,19 +1,19 @@
 var assert     = require('assert');
 var jsdom      = require('jsdom');
 var viewbridge = require('../lib/index');
-var ENGINES    = require('../lib/engines');
+var engines    = require('../lib/engines');
 
 var hasOwn = Object.prototype.hasOwnProperty;
 
 function eachEngine(fn) {
-  for (var key in ENGINES) {
+  for (var key in engines.ENGINE) {
     if (key === 'isSupported') continue;
-    fn(ENGINES[key]);
+    fn(engines.ENGINE[key]);
   }
 };
 
 
-describe('ENGINES Settings', function() {
+describe('ENGINE Settings', function() {
   it('should have a `name` property', function() {
     eachEngine(function(engine) {
       assert.equal(typeof engine.name, 'string');
@@ -59,7 +59,7 @@ describe('ENGINES Settings', function() {
 
 
 /*
- * Engines functionality
+ * Engine functionality
  *
  * For each engine, create a folder in the root of test named the
  * same as the engine. Within it create a template file with same
