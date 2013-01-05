@@ -1,3 +1,5 @@
+//TODO: This file is sloppy
+
 var assert     = require('assert');
 var fs         = require('fs');
 var path       = require('path');
@@ -87,7 +89,7 @@ afterEach(function() {
 /*
  * Specs
  */
-describe('viewbridge()', function() {
+describe('JS output file', function() {
   it('should create the JS file', function(done) {
     viewbridge(options01, function(err, info) {
       assert.ok( fs.existsSync(options01.output) );
@@ -96,55 +98,6 @@ describe('viewbridge()', function() {
     });
   });
 
-  it('should work with jade templates (default)', function(done) {
-    var options = {
-      dir:    jadedir
-    , engine: 'jade'
-    , output: path.join(deploydir, 'tmpljade.js')
-    };
-    viewbridge(options, baseTest(done));
-  });
-
-  it('should load the Jade runtime in browser', function(done) {
-    var options = {
-      dir: jadedir
-    , engine: 'jade'
-    , output: path.join(deploydir, 'tmpljade.js')
-    };
-    viewbridge(options, function(err, info) {
-      jsdom.env(html, [info.file], function(err, window) {
-        assert.ok(!!window.jade, 'window.jade should be defined');
-        done();
-      });
-    });
-  });
-
-  it('should work with Hogan templates', function(done) {
-    var options = {
-      dir:    hogandir
-    , engine: 'hogan'
-    , output: path.join(deploydir, 'tmplhogan.js')
-    };
-    viewbridge(options, baseTest(done));
-  });
-
-  it('should load Hogan lib in browser', function(done) {
-    var options = {
-      dir:    hogandir
-    , engine: 'hogan'
-    , output: path.join(deploydir, 'tmplhogan.js')
-    };
-    viewbridge(options, function(err, info) {
-      jsdom.env(html, [info.file], function(err, window) {
-        assert.ok(!!window.Hogan, 'window.Hogan should be defined');
-        done();
-      });
-    });
-  });
-});
-
-
-describe('JS output file', function() {
   it('should create the root namespace', function(done) {
     viewbridge(options01, function(err, info) {
       jsdom.env(html, [info.file], function(err, window) {
@@ -291,6 +244,27 @@ describe('Clientside template functions', function() {
       });
     });
   });
-
 });
 
+
+describe('Options', function() {
+  it('should compile all templates with allviews:true', function(done) {
+    var opts = {
+      allviews: true
+    , dir:      jadedir
+    , engine:   'jade'
+    , output:   path.join(deploydir, 'tmpl-all-views.js')
+    };
+    viewbridge(opts, function(err, info) {
+      assert.equal(err, null);
+      jsdom.env('<div id=foo></div>', [info.file], function(err, window) {
+        assert.ok(window.viewbridge);
+        assert.equal(Object.keys(window.viewbridge).length, 3);
+        assert.equal(typeof window.viewbridge.a,     'function');
+        assert.equal(typeof window.viewbridge.b,     'function');
+        assert.equal(typeof window.viewbridge.index, 'function');
+        done();
+      });
+    });
+  });
+});

@@ -6,10 +6,10 @@ var watch      = require('watch');
 var colors     = require('colors');
 var viewbridge = require('../lib/index');
 var ENGINES    = require('../lib/engines');
-var pkg        = require('../package');
+var pkg        = require('../package.json');
 
 
-function list(str) {
+function viewsList(str) {
   return str.split(',');
 };
 
@@ -19,11 +19,12 @@ program
   .usage('--engine engine_name [options]')
   .option('-e, --engine <engine>',        'Template engine. Required.')
   .option('-d, --dir <dir>',              'Directory of view files. Default is current directory.', process.cwd())
-  .option('-v, --views <view1,view2,..>', 'Views to compile.', list)
-  .option('-o, --output <output>',        'Output file path.')
-  .option('-n, --namespace <namespace>',  'Clientside namespace. Default is `viewbridge`', 'viewbridge')
+  .option('-v, --views <v1,v2,..>',       'Views to compile.', viewsList)
+  .option('-a, --all-views',              'Compile all views.')
   .option('-x, --ext <extension>',        'File extension of view files.')
+  .option('-o, --output <output>',        'Output file path.')
   .option('-R, --no-runtime',             'Do not include the engine\'s runtime.')
+  .option('-n, --namespace <namespace>',  'Clientside namespace. Default is `viewbridge`', 'viewbridge')
   .option('-w, --watch',                  'Compile templates when files change.')
   .parse(process.argv);
 
@@ -68,6 +69,7 @@ else {
   };
 
   console.info('Viewbridge watching dir: %s'.green, program.dir.grey.underline);
+  callViewbridge();
   watch.createMonitor(program.dir, watchOptions, function(monitor) {
     monitor.on('created', onTreeChange);
     monitor.on('changed', onTreeChange);
@@ -83,6 +85,7 @@ function callViewbridge() {
     , namespace: program.namespace
     , output:    program.output
     , views:     program.views
+    , allviews:  program.allViews
     , engine:    program.engine
     , ext:       program.ext
     , runtime:   program.runtime

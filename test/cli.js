@@ -16,6 +16,7 @@ var html = fs.readFileSync(path.join(htmldir, 'viewbridge.html'), 'utf8');
 
 var output = path.join(deploydir, 'cli01.js');
 
+
 /*
  * afterEach
  */
@@ -28,11 +29,9 @@ afterEach(function() {
 
   var watch = fs.readdirSync(watchdir);
   watch.forEach(function(file) {
-    console.log('DELETE: %j', file);
     fs.unlinkSync( path.join(watchdir, file) );
   });
 });
-
 
 
 /*
@@ -150,6 +149,23 @@ describe('CLI options', function() {
 
   it('should have a -v short option for --views', function(done) {
     viewsTest('bin/viewbridge -v test/views/about,test/views/status/time -e jade -o ' + output, done);
+  });
+
+  /*
+   * --all-views
+   */
+  it('should compile all views with --all-views', function(done) {
+    exec('bin/viewbridge --all-views -d test/jade -e jade -o ' + output, function(err, stdout, stderr) {
+      assert.equal(err, null);
+      jsdom.env(html, [stdout.trim()], function(err, window) {
+        assert.ok(window.viewbridge);
+        assert.equal(Object.keys(window.viewbridge).length, 3);
+        assert.equal(typeof window.viewbridge.a,     'function');
+        assert.equal(typeof window.viewbridge.b,     'function');
+        assert.equal(typeof window.viewbridge.index, 'function');
+        done();
+      });
+    });
   });
 
   /*

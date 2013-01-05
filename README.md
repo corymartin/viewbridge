@@ -59,16 +59,17 @@ Usage: viewbridge --engine engine_name [options]
 
 Options:
 
-  -h, --help                    output usage information
-  -V, --version                 output the version number
-  -e, --engine <engine>         Template engine. Required.
-  -d, --dir <dir>               Directory of view files. Default is current directory.
-  -v, --views <view1,view2,..>  Views to compile.
-  -o, --output <output>         Output file path.
-  -n, --namespace <namespace>   Clientside namespace. Default is `viewbridge`
-  -x, --ext <extension>         File extension of view files.
-  -R, --no-runtime              Do not include the engine's runtime.
-  -w, --watch                   Compile templates when files change.
+  -h, --help                   output usage information
+  -V, --version                output the version number
+  -e, --engine <engine>        Template engine. Required.
+  -d, --dir <dir>              Directory of view files. Default is current directory.
+  -v, --views <v1,v2,..>       Views to compile.
+  -a, --all-views              Compile all views.
+  -x, --ext <extension>        File extension of view files.
+  -o, --output <output>        Output file path.
+  -R, --no-runtime             Do not include the engine's runtime.
+  -n, --namespace <namespace>  Clientside namespace. Default is `viewbridge`
+  -w, --watch                  Compile templates when files change.
 ```
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -95,6 +96,7 @@ var viewbridge = require('viewbridge');
                working directory.
 - `views`:     Array of views to compile functions for.
                This option can be used instead of or in addtion to Viewbridge attribute comments.
+- `allviews`:  Compiles all views regardless of attribute comments or `views` option.
 - `output`:    JS file to create.
 - `namespace`: Clientside namespace. Default is `viewbridge`. No limit on how deep it
                can go (eg `myapp.foo.templates`). Checks to see if a namespace exists
@@ -115,8 +117,8 @@ var viewbridge = require('viewbridge');
 
 Viewbridge Attribute Comments
 -----------------------------
-Placing an attribute comment in your template to tell Viewbridge
-to compile a clientside function for it.
+Placing an attribute comment in your template signifies that Viewbridge
+should compile a clientside function for it.
 
 Viewbridge will also create templates for views specifed by the `views` option
 in either the CLI app or the exposed function.
