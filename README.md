@@ -115,8 +115,8 @@ var viewbridge = require('viewbridge');
 
 Viewbridge Attribute Comments
 -----------------------------
-Placing an attribute comment in your template to tell Viewbridge
-to compile a clientside function for it.
+Placing an attribute comment in your template signifies that Viewbridge
+should compile a clientside function for it.
 
 Viewbridge will also create templates for views specifed by the `views` option
 in either the CLI app or the exposed function.
