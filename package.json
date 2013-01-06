@@ -15,18 +15,18 @@
     "url": "git@github.com:corymartin/viewbridge.git"
   }
 , "dependencies": {
-    "commander": "~1.1.1"
-  , "jade": "*"
-  , "hogan.js": ">=2.0.0"
-  , "ejs": "*"
-  , "async": "~0.1.22"
-  , "wrench": "~1.4.4"
-  , "watch": "~0.5.1"
-  , "colors": "*"
+    "commander": "1.1.x"
+  , "jade":      "0.27.x"
+  , "hogan.js":  "2.0.x"
+  , "ejs":       "0.8.x"
+  , "async":     "0.1.x"
+  , "wrench":    "1.4.x"
+  , "watch":     "0.5.x"
+  , "colors":    "0.6.x"
   }
 , "devDependencies": {
-    "mocha": "~1.7.4"
-  , "jsdom": "~0.3.3"
+    "mocha": "1.x.x"
+  , "jsdom": "0.3.x"
   }
 , "engines": {
     "node": ">= 0.8.x"
