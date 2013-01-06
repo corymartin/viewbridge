@@ -39,8 +39,14 @@ program
 
 /*
  * Config file
+ * Use if:
+ *  File exists and no args passed (argv.length == 2)
+ *  or File exists and only --watch passed.
+ *  Any other args passed override usage of config file
  */
-if (process.argv.length === 2 && fs.existsSync('viewbridge.json')) {
+var arglen = process.argv.length;
+if (fs.existsSync('viewbridge.json')
+  && (arglen === 2 || (arglen === 3 && program.watch))) {
   var file = fs.readFileSync('viewbridge.json', 'utf8');
   options = JSON.parse(file);
 }

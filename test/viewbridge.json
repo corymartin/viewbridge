@@ -1,0 +1,10 @@
+{
+  "dir":       "./hogan"
+, "namespace": "fizz.buzz"
+, "output":    "./deploy/configtest01.js"
+, "views":     []
+, "allviews":  false
+, "engine":    "hogan"
+, "ext":       ".hjs"
+, "runtime":   true
+}
