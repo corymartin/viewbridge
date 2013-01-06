@@ -26,9 +26,9 @@ describe('ENGINE Settings', function() {
     });
   });
 
-  it('should have a `compileConfig` property', function() {
+  it('should have a `compileOptions` property', function() {
     engines.each(function(engine) {
-      assert.equal(hasOwn.call(engine, 'compileConfig'), true);
+      assert.equal(hasOwn.call(engine, 'compileOptions'), true);
     });
   });
 
@@ -46,6 +46,17 @@ describe('ENGINE Settings', function() {
       assert.equal(typeof engine.runtime, 'function');
       var js = engine.runtime();
       assert.equal(typeof js, 'string');
+    });
+  });
+
+  it('should have a `addCompileOptions` property', function() {
+    engines.each(function(engine) {
+      assert.equal(typeof engine.addCompileOptions, 'function');
+      assert.equal(typeof engine.compileOptions.ztesta, 'undefined');
+      assert.equal(typeof engine.compileOptions.ztestb, 'undefined');
+      engine.addCompileOptions({ztesta:33, ztestb:44});
+      assert.equal(typeof engine.compileOptions.ztesta, 'number');
+      assert.equal(typeof engine.compileOptions.ztestb, 'number');
     });
   });
 });

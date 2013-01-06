@@ -10,7 +10,7 @@ Or just precompile your templates.
 Only views/templates specified will be compiled and exported.
 
 Engines currently supported:
-[Jade](https://github.com/visionmedia/jade/),
+[Jade](http://jade-lang.com/),
 [Hogan](http://twitter.github.com/hogan.js/) *(mustache)*
 
 #### Serverside View File
