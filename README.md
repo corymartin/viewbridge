@@ -11,7 +11,8 @@ Only views/templates specified will be compiled and exported.
 
 Engines currently supported:
 [Jade](http://jade-lang.com/),
-[Hogan](http://twitter.github.com/hogan.js/) *(mustache)*
+[Hogan](http://twitter.github.com/hogan.js/) *(mustache)*,
+[EJS](https://github.com/visionmedia/ejs)
 
 #### Serverside View File
 The attribute comment tells Viewbridge to precompile a clientside function for this view.
@@ -124,10 +125,23 @@ Viewbridge will also create templates for views specifed by the `views` option
 in either the CLI app or the exposed function.
 
 ### Jade
-`//@ viewbridge` or `//-@ viewbridge`
+```
+//@ viewbridge
+//-@ viewbridge
+```
 
 ### Hogan (Mustache)
-`{{!@ viewbridge }}`
+```
+{{!@ viewbridge }}
+```
+
+### EJS
+```
+<%/*@ viewbridge */%>
+<%
+  //@ viewbridge
+%>
+```
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
