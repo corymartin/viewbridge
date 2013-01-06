@@ -73,6 +73,19 @@ Options:
   -w, --watch                  Compile templates when files change.
 ```
 
+### Configuration File
+Instead of specifying the options at the command line, you can create a
+JSON configuration file of these options.
+
+The file must be named `viewbridge.json` and it must be placed in the
+current working directory where you call the viewridge CLI.
+
+See example in the tests
+[here](https://github.com/corymartin/viewbridge/blob/master/test/viewbridge.json).
+
+Then, just call `viewbridge` from the command line with no options (or just the
+`--watch` option) to use the options from the configuration file.
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 API

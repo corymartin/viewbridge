@@ -1,6 +1,6 @@
 {
   "name": "viewbridge"
-, "version": "0.2.3"
+, "version": "0.3.0"
 , "description": "W.I.P. Create precompiled clientside templates from serverside templates."
 , "readmeFilename": "README.md"
 , "license": "MIT"

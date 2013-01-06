@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+var fs         = require('fs');
 var path       = require('path');
 var program    = require('commander');
 var watch      = require('watch');
@@ -8,12 +9,19 @@ var viewbridge = require('../lib/index');
 var engines    = require('../lib/engines');
 var pkg        = require('../package.json');
 
+/*
+ * Get options by either the config file or the CLI app
+ */
+var options;
 
 function viewsList(str) {
   return str.split(',');
 };
 
-
+/*
+ * CLI
+ * Commander.js
+ */
 program
   .version(pkg.version)
   .usage('--engine engine_name [options]')
@@ -29,14 +37,44 @@ program
   .parse(process.argv);
 
 
+/*
+ * Config file
+ * Use if:
+ *  File exists and no args passed (argv.length == 2)
+ *  or File exists and only --watch passed.
+ *  Any other args passed override usage of config file
+ */
+var arglen = process.argv.length;
+if (fs.existsSync('viewbridge.json')
+  && (arglen === 2 || (arglen === 3 && program.watch))) {
+  var file = fs.readFileSync('viewbridge.json', 'utf8');
+  options = JSON.parse(file);
+}
+/*
+ * Otherwise use CLI input
+ */
+else {
+  options = {
+    dir:       program.dir
+  , namespace: program.namespace
+  , output:    program.output
+  , views:     program.views
+  , allviews:  program.allViews
+  , engine:    program.engine
+  , ext:       program.ext
+  , runtime:   program.runtime
+  };
+}
+
+
 // Engine is required
-if (!program.engine) {
+if (!options.engine) {
   console.error('\nError: Required argument missing: engine'.red);
   program.help();
   process.exit(1);
 }
-else if (!engines.isSupported(program.engine)) {
-  console.error('\nError: Engine not supported: %s'.red, program.engine);
+else if (!engines.isSupported(options.engine)) {
+  console.error('\nError: Engine not supported: %s'.red, options.engine);
   program.help();
   process.exit(1);
 }
@@ -57,7 +95,7 @@ else {
   , persistent:     true
   , interval:       500
   };
-  var ext = program.ext || engines.ENGINE[program.engine].ext;
+  var ext = options.ext || engines.ENGINE[options.engine].ext;
   ext = ext.toLowerCase();
   var isExt = function(file) {
     return path.extname(file).toLowerCase() === ext;
@@ -68,9 +106,9 @@ else {
     callViewbridge();
   };
 
-  console.info('Viewbridge watching dir: %s'.green, program.dir.grey.underline);
+  console.info('Viewbridge watching dir: %s'.green, options.dir.grey.underline);
   callViewbridge();
-  watch.createMonitor(program.dir, watchOptions, function(monitor) {
+  watch.createMonitor(options.dir, watchOptions, function(monitor) {
     monitor.on('created', onTreeChange);
     monitor.on('changed', onTreeChange);
     monitor.on('removed', onTreeChange);
@@ -80,23 +118,14 @@ else {
 
 function callViewbridge() {
   viewbridge(
-    {
-      dir:       program.dir
-    , namespace: program.namespace
-    , output:    program.output
-    , views:     program.views
-    , allviews:  program.allViews
-    , engine:    program.engine
-    , ext:       program.ext
-    , runtime:   program.runtime
-    }
+    options
   , function(err, info) {
       if (err) {
         console.error('\nError:\n %s'.red, err);
         process.exit(1);
       }
 
-      if (program.output) {
+      if (options.output) {
         console.info(info.file);
       }
       else {
