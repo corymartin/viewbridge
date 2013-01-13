@@ -19,6 +19,7 @@
   , "jade":      "0.27.x"
   , "hogan.js":  "2.0.x"
   , "ejs":       "0.8.x"
+  , "underscore":"1.4.x"
   , "async":     "0.1.x"
   , "wrench":    "1.4.x"
   , "watch":     "0.5.x"

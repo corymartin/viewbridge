@@ -1,4 +1,5 @@
 var assert     = require('assert');
+var path       = require('path');
 var jsdom      = require('jsdom');
 var viewbridge = require('../lib/index');
 var engines    = require('../lib/engines');
@@ -72,7 +73,8 @@ describe('ENGINE Settings', function() {
 engines.each(function(engine) {
   describe(engine.name, function() {
     it('should use the namespaced function without additional `render()` type functions', function(done) {
-      viewbridge({engine:engine.name, dir:'test'}, function(err, info) {
+      var opts = {engine:engine.name, dir:path.join('test', engine.name)};
+      viewbridge(opts, function(err, info) {
         assert.equal(err, null);
         jsdom.env({
           html: '<div id="test"></div>'
@@ -80,7 +82,7 @@ engines.each(function(engine) {
         , done: function(err, window) {
             assert.doesNotThrow(function() {
               var test = window.document.getElementById('test');
-              test.innerHTML = window.viewbridge[engine.name].index({
+              test.innerHTML = window.viewbridge.index({
                 title: 'Hello Jojo', list: ['uno', 'dos']
               });
             }, Error);
