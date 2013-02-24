@@ -1,0 +1,57 @@
+{{{engine}}}
+
+
+/*
+ * Viewbridge
+ * ==========
+ * Template functions exported via Viewbridge
+ * github.com/corymartin/viewbridge
+ */
+;(function(undefined) {
+
+  // Namespaces
+  // ----------
+  function createNamespace(ns_string) {
+    // Adapted from similar function in JavaScript Patterns by Stoyan Stefanov
+    var parts = ns_string.split('.');
+    var parent = window;
+    for (var i = 0; i < parts.length; i++) {
+      if (parent[parts[i]] == null) {
+        parent[parts[i]] = {};
+      }
+      parent = parent[parts[i]];
+    }
+  };
+  var namespaces = [ {{{namespaces}}} ];
+  for (var i = 0; i < namespaces.length; i++) {
+    createNamespace(namespaces[i]);
+  }
+
+
+  // Template Functions
+  // ------------------
+  {{#templates}}
+  /*
+   * Template: {{{name}}}()
+   */
+  {{{name}}} = {{{fn}}};
+  {{/templates}}
+
+
+  // Exports
+  // -------
+  // CommonJS/Node.js Support
+  if (typeof exports !== 'undefined') {
+    if (typeof module !== 'undefined' && module.exports) {
+      exports = module.exports = {{{templateNamespace}}};
+    }
+    exports.{{{templateNamespace}}} = {{{templateNamespace}}};
+  }
+  // AMD/RequireJS Support
+  else if (typeof define === 'function' && define.amd) {
+    define(function() {
+      return {{{templateNamespace}}};
+    });
+  }
+
+})();
