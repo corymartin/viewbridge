@@ -1,6 +1,6 @@
 {
   "name": "viewbridge"
-, "version": "0.3.0"
+, "version": "0.4.0"
 , "description": "W.I.P. Create precompiled clientside templates from serverside templates."
 , "readmeFilename": "README.md"
 , "license": "MIT"
@@ -15,22 +15,22 @@
     "url": "git@github.com:corymartin/viewbridge.git"
   }
 , "dependencies": {
-    "commander": "1.1.x"
-  , "jade":      "0.27.x"
+    "commander": "2.x.x"
+  , "jade":      "0.34.x"
   , "hogan.js":  "2.0.x"
   , "ejs":       "0.8.x"
-  , "underscore":"1.4.x"
-  , "async":     "0.1.x"
-  , "wrench":    "1.4.x"
-  , "watch":     "0.5.x"
+  , "underscore":"1.5.x"
+  , "async":     "0.2.x"
+  , "wrench":    "1.5.x"
+  , "watch":     "0.8.x"
   , "colors":    "0.6.x"
   }
 , "devDependencies": {
     "mocha": "1.x.x"
-  , "jsdom": "0.3.x"
+  , "jsdom": "0.8.x"
   }
 , "engines": {
-    "node": ">= 0.8.x"
+    "node": ">= 0.10.x"
   }
 , "scripts": {
     "test": "mocha"

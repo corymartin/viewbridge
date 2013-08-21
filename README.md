@@ -243,3 +243,12 @@ Notes
 - Jade's block, extend, yield, include, etc. do not work clientside.
 - Jade's mixins do work.
 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Change Log
+----------
+
+0.4.0
+
+  - Node version 0.10.x now required
+  - Updated dependencies
