@@ -3,8 +3,7 @@
 
 /*!
  * @preserve
- * Viewbridge
- * ==========
+ * Viewbridge {{version}}
  * Template functions exported via Viewbridge
  * github.com/corymartin/viewbridge
  */
@@ -57,4 +56,5 @@ void function(undefined) {
       return {{{templateNamespace}}};
     });
   }
+
 }();

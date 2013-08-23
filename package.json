@@ -1,6 +1,6 @@
 {
   "name": "viewbridge"
-, "version": "0.4.0"
+, "version": "0.4.1"
 , "description": "W.I.P. Create precompiled clientside templates from serverside templates."
 , "readmeFilename": "README.md"
 , "license": "MIT"
@@ -19,7 +19,6 @@
   , "jade":      "0.34.x"
   , "hogan.js":  "2.0.x"
   , "ejs":       "0.8.x"
-  , "underscore":"1.5.x"
   , "async":     "0.2.x"
   , "wrench":    "1.5.x"
   , "watch":     "0.8.x"

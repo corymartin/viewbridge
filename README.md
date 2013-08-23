@@ -105,7 +105,7 @@ var viewbridge = require('viewbridge');
 `options` properties:
 
 - `engine`:    __Required__. Template engine.
-    - `jade`, `hogan`
+    - `jade`, `hogan`, `ejs`
 - `dir`:       Path to root of views/templates directory. Default is current
                working directory.
 - `views`:     Array of views to compile functions for.
@@ -248,7 +248,11 @@ Notes
 Change Log
 ----------
 
+0.4.1
+
+- Bug fix.
+
 0.4.0
 
-  - Node version 0.10.x now required
-  - Updated dependencies
+- Node version 0.10.x now required
+- Updated dependencies
