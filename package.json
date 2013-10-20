@@ -16,7 +16,7 @@
   }
 , "dependencies": {
     "commander": "2.x.x"
-  , "jade":      "0.34.x"
+  , "jade":      "0.35.x"
   , "hogan.js":  "2.0.x"
   , "ejs":       "0.8.x"
   , "async":     "0.2.x"
