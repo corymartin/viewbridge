@@ -115,7 +115,7 @@ var viewbridge = require('viewbridge');
 - `namespace`: Clientside namespace. Default is `viewbridge`. No limit on how deep it
                can go (eg `myapp.foo.templates`). Checks to see if a namespace exists
                before creating a new one.
-- `ext`:       File extension. Defaults are Jade:`.jade`, Hogan:`.html`
+- `ext`:       File extension. Defaults are Jade:`.jade`, Hogan:`.html`, EJS:`.ejs`
 - `runtime`:   Include the template engines runtime JS. Default is `true`.
                If `false` you will have to include it yourself separately.
 
