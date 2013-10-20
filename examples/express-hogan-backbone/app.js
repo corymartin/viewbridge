@@ -51,7 +51,7 @@ app.get('/', function(req, res) {
   // This just has a link to the /movies page.
   // Want the demo there to demonstrate things with a deeper namespace
   res.render('index', {
-    title: 'Express/Backbone/Hogan Demo'
+    title: 'Express/Hogan/Backbone Demo'
   });
 });
 
@@ -60,7 +60,7 @@ app.get('/', function(req, res) {
 //
 app.get('/movies', function(req, res) {
   res.render('movies', {
-    title:    'Movie Library',
+    title:    'Express/Hogan/Backbone Demo',
     movies:   movies,                 // Data used to render on the server.
     data:     JSON.stringify(movies), // Data used to bootstrap Backbone on the client.
     partials: partials.movies,        // Register Hogan partials

@@ -12,6 +12,7 @@
   </head>
   <body class="container">
     <h1>{{ title }}</h1>
+    <h2>Movie Library</h2>
 
     <table class="table" id="movie_table">
     	<thead>
@@ -35,7 +36,7 @@
     <script src='/javascripts/vendor/jquery.js'></script>
     <script src='/javascripts/vendor/lodash.underscore.js'></script>
     <script src='/javascripts/vendor/backbone.js'></script>
-    <!-- Templates exported and precompiled via Viewbridge. -->
+    {{! Templates exported and precompiled via Viewbridge. }}
     <script src='/javascripts/templates.js'></script>
 
     <script>
@@ -68,7 +69,7 @@
           tagName: 'tr',
 
           initialize: function() {
-            this.listenTo(this.model, 'change',  this.render);
+            this.listenTo(this.model, 'change', this.render);
           },
 
           events: {
@@ -136,7 +137,8 @@
         // Bootstrap the collection with initial data.  Pass a custom
         // flag to indicate that we only want to initialize the relevant Views
         // and not render them.
-        app.movies.reset({{{data}}}, {bootstrap: true});
+        var bootstrapData = {{{data}}};
+        app.movies.reset(bootstrapData, {bootstrap: true});
 
       }();
     </script>
