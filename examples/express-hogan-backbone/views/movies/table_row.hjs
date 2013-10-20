@@ -1,0 +1,12 @@
+{{!@ viewbridge }}
+
+<td>{{ title }}</td>
+<td>{{ studio }}</td>
+<td>
+  {{#like}}
+    <button class="btn btn-success like">Yes</button>
+  {{/like}}
+  {{^like}}
+    <button class="btn like">No</button>
+  {{/like}}
+</td>

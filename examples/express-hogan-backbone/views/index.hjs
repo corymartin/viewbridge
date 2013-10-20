@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>{{ title }}</title>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+  </head>
+  <body class="container">
+    <h1>{{ title }}</h1>
+    <a href="/movies">Go to the movies page for the demo</a>
+  </body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>{{ title }}</title>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+    <style>
+      td { vertical-align: middle !important; }
+      tr > th:nth-child(3),
+      tr > td:nth-child(3) { text-align: center; }
+    </style>
+  </head>
+  <body class="container">
+    <h1>{{ title }}</h1>
+
+    <table class="table" id="movie_table">
+    	<thead>
+    		<tr>
+    			<th>Studio</th>
+    			<th>Title</th>
+    			<th>Liked?</th>
+    		</tr>
+    	</thead>
+      <tbody>
+      {{#movies}}
+        <tr id="movie_{{ id }}">
+          {{! View/Template used on both server and client }}
+          {{> table_row}}
+        </tr>
+      {{/movies}}
+      </tbody>
+    </table>
+
+
+    <script src='/javascripts/vendor/jquery.js'></script>
+    <script src='/javascripts/vendor/lodash.underscore.js'></script>
+    <script src='/javascripts/vendor/backbone.js'></script>
+    <!-- Templates exported and precompiled via Viewbridge. -->
+    <script src='/javascripts/templates.js'></script>
+
+    <script>
+      void function() { 'use strict'
+
+        window.app = window.app || {};
+
+
+        //
+        // Model - Movie
+        //
+        app.Movie = Backbone.Model.extend();
+
+
+        //
+        // Collection - Movies
+        //
+        app.movies = function() {
+          var Movies = Backbone.Collection.extend({
+            model: app.Movie
+          });
+          return new Movies();
+        }();
+
+
+        //
+        // View - Movie Row
+        //
+        app.MovieRow = Backbone.View.extend({
+          tagName: 'tr',
+
+          initialize: function() {
+            this.listenTo(this.model, 'change',  this.render);
+          },
+
+          events: {
+            'click .like': 'toggleLike'
+          },
+
+          render: function() {
+            // Viewbridge!
+            // This is the very same template used on the server.
+            this.el.innerHTML =
+              viewbridge.movies.table_row(this.model.toJSON());
+            return this;
+          },
+
+          toggleLike: function() {
+            var like = this.model.get('like');
+            this.model.set('like', ! like);
+          }
+        });
+
+
+        //
+        // View - Movie Table
+        //
+        app.MovieTable = Backbone.View.extend({
+          el: '#movie_table',
+
+          initialize: function() {
+            this.tbody = this.el.querySelector('tbody');
+            this.listenTo(app.movies, 'add',   this.add);
+            this.listenTo(app.movies, 'reset', this.reset);
+          },
+
+          add: function(model) {
+            var row = new app.MovieRow({model: model});
+            this.tbody.appendChild( row.render().el );
+          },
+
+          bootstrap: function() {
+            app.movies.each(function(model) {
+              var el = document.getElementById('movie_' + model.id);
+              if (el === null) return;
+              // Since the view was already rendered on the server, we just
+              // need to initialize the Backbone View with the model and the
+              // DOM element.
+              new app.MovieRow({model: model, el: el});
+            });
+          },
+
+          reset: function(collection, options) {
+            if (options.bootstrap) {
+              this.bootstrap();
+            } else {
+              this.tbody.innerHTML = '';
+              app.movies.each(this.add, this);
+            }
+          }
+        });
+
+
+        //
+        // Initialize the app
+        //
+        new app.MovieTable();
+        // Bootstrap the collection with initial data.  Pass a custom
+        // flag to indicate that we only want to initialize the relevant Views
+        // and not render them.
+        app.movies.reset({{{data}}}, {bootstrap: true});
+
+      }();
+    </script>
+  </body>
+</html>
