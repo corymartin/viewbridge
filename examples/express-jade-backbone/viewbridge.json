@@ -1,0 +1,5 @@
+{
+  "dir":    "./views",
+  "engine": "jade",
+  "output": "./public/javascripts/templates.js"
+}
