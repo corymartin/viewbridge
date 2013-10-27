@@ -15,6 +15,7 @@ var pkg        = require('../package.json');
 var options;
 
 function viewsList(str) {
+  if (! str) return [];
   return str.split(',');
 };
 
