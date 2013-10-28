@@ -1,37 +1,37 @@
 {
-  "name": "viewbridge"
-, "version": "0.4.1"
-, "description": "W.I.P. Create precompiled clientside templates from serverside templates."
-, "readmeFilename": "README.md"
-, "license": "MIT"
-, "author": "Cory Martin"
-, "keywords": ["templates", "templating", "views", "client", "build tool"]
-, "main": "index.js"
-, "bin": {
+  "name": "viewbridge",
+  "version": "0.4.1",
+  "description": "W.I.P. Create precompiled clientside templates from serverside templates.",
+  "readmeFilename": "README.md",
+  "license": "MIT",
+  "author": "Cory Martin",
+  "keywords": ["templates", "templating", "views", "client", "build tool"],
+  "main": "index.js",
+  "bin": {
     "viewbridge": "./bin/viewbridge"
-  }
-, "repository": {
+  },
+  "repository": {
     "type": "git",
     "url": "git@github.com:corymartin/viewbridge.git"
-  }
-, "dependencies": {
-    "commander": "2.x.x"
-  , "jade":      "0.35.x"
-  , "hogan.js":  "2.0.x"
-  , "ejs":       "0.8.x"
-  , "async":     "0.2.x"
-  , "wrench":    "1.5.x"
-  , "watch":     "0.8.x"
-  , "colors":    "0.6.x"
-  }
-, "devDependencies": {
-    "mocha": "1.x.x"
-  , "jsdom": "0.8.x"
-  }
-, "engines": {
+  },
+  "dependencies": {
+    "commander": "2.x.x",
+    "jade":      "0.35.x",
+    "hogan.js":  "2.0.x",
+    "ejs":       "0.8.x",
+    "async":     "0.2.x",
+    "wrench":    "1.5.x",
+    "watch":     "0.8.x",
+    "colors":    "0.6.x"
+  },
+  "devDependencies": {
+    "mocha": "1.x.x",
+    "jsdom": "0.8.x"
+  },
+  "engines": {
     "node": ">= 0.10.x"
-  }
-, "scripts": {
-    "test": "mocha"
+  },
+  "scripts": {
+    "test": "make test"
   }
 }
