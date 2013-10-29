@@ -56,14 +56,14 @@ if (fs.existsSync('viewbridge.json')
  */
 else {
   options = {
-    dir:       program.dir
-  , namespace: program.namespace
-  , output:    program.output
-  , views:     program.views
-  , allviews:  program.allViews
-  , engine:    program.engine
-  , ext:       program.ext
-  , runtime:   program.runtime
+    dir:       program.dir,
+    namespace: program.namespace,
+    output:    program.output,
+    views:     program.views,
+    allviews:  program.allViews,
+    engine:    program.engine,
+    ext:       program.ext,
+    runtime:   program.runtime,
   };
 }
 
@@ -92,9 +92,9 @@ else {
    * Watch
    */
   var watchOptions = {
-    ignoreDotFiles: true
-  , persistent:     true
-  , interval:       500
+    ignoreDotFiles: true,
+    persistent:     true,
+    interval:       500,
   };
   var ext = options.ext || engines.ENGINE[options.engine].ext;
   ext = ext.toLowerCase();
@@ -119,8 +119,8 @@ else {
 
 function callViewbridge() {
   viewbridge(
-    options
-  , function(err, info) {
+    options,
+    function(err, info) {
       if (err) {
         console.error('\nError:\n %s'.red, err);
         process.exit(1);
