@@ -1,4 +1,4 @@
-//TODO: This file is sloppy
+//TODO: This is sloppy
 
 var assert     = require('assert');
 var fs         = require('fs');
@@ -43,6 +43,17 @@ var baseTest = function(done) {
   };
 };
 
+var namespaceExists = function(context, ns) {
+  if (! ns) return false;
+  var parent = context;
+  var parts = ns.split('.');
+  return parts.every(function(part) {
+    if (parent[part] == null) return false;
+    parent = parent[part];
+    return true;
+  });
+};
+
 var options01;
 var options02;
 var options03;
@@ -53,24 +64,24 @@ var options03;
  */
 beforeEach(function() {
   options01 = {
-    dir:       viewsdir
-  , engine:    'jade'
-  , views:     ['about', 'status/index', 'status/time']
-  , output:    path.join(deploydir, 'tmpl01.js')
-  , namespace: 'APP.T'
+    dir:       viewsdir,
+    engine:    'jade',
+    views:     ['about', 'status/index', 'status/time'],
+    output:    path.join(deploydir, 'tmpl01.js'),
+    namespace: 'APP.T',
   };
 
   options02 = {
-    dir:       viewsdir
-  , engine:    'jade'
-  , output:    path.join(deploydir, 'tmpl02.js')
+    dir:       viewsdir,
+    engine:    'jade',
+    output:    path.join(deploydir, 'tmpl02.js'),
   };
 
   options03 = {
-    dir:       viewsdir
-  , engine:    'jade'
-  , views:     ['user/index']
-  , output:    path.join(deploydir, 'tmpl03.js')
+    dir:       viewsdir,
+    engine:    'jade',
+    views:     ['user/index'],
+    output:    path.join(deploydir, 'tmpl03.js'),
   };
 });
 
@@ -92,6 +103,7 @@ afterEach(function() {
 describe('JS output file', function() {
   it('should create the JS file', function(done) {
     viewbridge(options01, function(err, info) {
+      assert.equal(info.stats.templateCount, 3);
       assert.ok( fs.existsSync(options01.output) );
       assert.ok( fs.existsSync(info.file) );
       done();
@@ -101,9 +113,7 @@ describe('JS output file', function() {
   it('should create the root namespace', function(done) {
     viewbridge(options01, function(err, info) {
       jsdom.env(html, [info.file], function(err, window) {
-        assert.doesNotThrow(function() {
-          if (!window.APP.T) throw new Error;
-        }, Error);
+        assert.ok(namespaceExists(window, 'APP.T'), 'Namespace APP.T should exist');
         assert.equal(typeof window.APP.T, 'object');
         done();
       });
@@ -113,16 +123,86 @@ describe('JS output file', function() {
   it('should have a template function for each view requested by options', function(done) {
     viewbridge(options01, function(err, info) {
       jsdom.env(html, [info.file], function(err, window) {
-        assert.doesNotThrow(function() {
-          if ( !window.APP.T.about
-            || !window.APP.T.status.index
-            || !window.APP.T.status.time) {
-            throw new Error;
-          }
-        }, Error);
+        assert.ok(namespaceExists(window, 'APP.T'),        'Namespace APP.T should exist');
+        assert.ok(namespaceExists(window, 'APP.T.status'), 'Namespace APP.T.status should exist');
         assert.equal(typeof window.APP.T.about,        'function');
         assert.equal(typeof window.APP.T.status.index, 'function');
         assert.equal(typeof window.APP.T.status.time,  'function');
+        done();
+      });
+    });
+  });
+
+  it('should create templates `views` in `dir` if both options are passed', function(done) {
+    var options = {
+      engine:    'jade',
+      dir:       viewsdir,
+      views:     ['about'],
+      output:    path.join(deploydir, 'tmpl01.js'),
+      namespace: 'APP.T',
+    };
+    viewbridge(options, function(err, info) {
+      assert.equal(err, null);
+      assert.equal(info.stats.templateCount, 1);
+      assert.equal(info.stats.templates[0], 'APP.T.about');
+      jsdom.env(html, [info.file], function(err, window) {
+        assert.equal(typeof window.APP.T.about, 'function');
+        done();
+      });
+    });
+  });
+
+  it('should creates templates specified by `views` option in CWD if `dir` is not passed', function(done) {
+    var options = {
+      engine:    'jade',
+      views:     ['test/views/about'],
+      output:    path.join(deploydir, 'tmpl01.js'),
+      namespace: 'APP.T',
+    };
+    viewbridge(options, function(err, info) {
+      assert.equal(err, null);
+      assert.equal(info.stats.templateCount, 1);
+      assert.equal(info.stats.templates[0], 'APP.T.test.views.about');
+      jsdom.env(html, [info.file], function(err, window) {
+        assert.equal(typeof window.APP.T.test.views.about, 'function');
+        done();
+      });
+    });
+  });
+
+  it('should error if the the `engine` option is not passed', function(done) {
+    var options = {
+    };
+    viewbridge(options, function(err, info) {
+      assert.notEqual(err, null);
+      assert.equal(err.message, 'Engine is required');
+      done();
+    });
+  });
+
+  it('should error on an unknown `engine` option', function(done) {
+    var options = {
+      engine: 'cheesy_poofs_zzzzzz'
+    };
+    viewbridge(options, function(err, info) {
+      assert.notEqual(err, null);
+      assert.equal(err.message, 'Requested engine is not supported');
+      done();
+    });
+  });
+
+
+  ;[
+    'jade',
+    'hogan',
+    'ejs',
+  ].forEach(function(engine) {
+    it('should have the `'+engine+'` engine', function(done) {
+      var options = {
+        engine: engine
+      };
+      viewbridge(options, function(err, info) {
+        assert.equal(err, null);
         done();
       });
     });
@@ -132,13 +212,9 @@ describe('JS output file', function() {
     viewbridge(options02, function(err, info) {
       jsdom.env(html, [info.file], function(err, window) {
         assert.equal(info.stats.templateCount, 3);
-        assert.doesNotThrow(function() {
-          if ( !window.viewbridge.status.time
-            || !window.viewbridge.user.greeting
-            || !window.viewbridge.user.account.info) {
-            throw new Error;
-          }
-        }, Error);
+        assert.ok(namespaceExists(window, 'viewbridge.status'),       'Namespace viewbridge.status should exist');
+        assert.ok(namespaceExists(window, 'viewbridge.user'),         'Namespace viewbridge.user should exist');
+        assert.ok(namespaceExists(window, 'viewbridge.user.account'), 'Namespace viewbridge.user.account should exist');
         assert.equal(typeof window.viewbridge.status.time,       'function');
         assert.equal(typeof window.viewbridge.user.greeting,     'function');
         assert.equal(typeof window.viewbridge.user.account.info, 'function');
@@ -147,26 +223,6 @@ describe('JS output file', function() {
     });
   });
 
-  it('should have a template function for each view requested by options and Viewbridge attributes', function(done) {
-    viewbridge(options03, function(err, info) {
-      jsdom.env(html, [info.file], function(err, window) {
-        assert.equal(info.stats.templateCount, 4);
-        assert.doesNotThrow(function() {
-          if ( !window.viewbridge.status.time
-            || !window.viewbridge.user.greeting
-            || !window.viewbridge.user.account.info
-            || !window.viewbridge.user.index) {
-            throw new Error;
-          }
-        }, Error);
-        assert.equal(typeof window.viewbridge.status.time,       'function');
-        assert.equal(typeof window.viewbridge.user.greeting,     'function');
-        assert.equal(typeof window.viewbridge.user.account.info, 'function');
-        assert.equal(typeof window.viewbridge.user.index,        'function');
-        done();
-      });
-    });
-  });
 });
 
 

@@ -1,6 +1,6 @@
 
 test:
-	mocha --timeout 4000
+	mocha --timeout 5000
 
 
 .PHONY: test
