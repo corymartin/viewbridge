@@ -44,9 +44,7 @@ describe('ENGINE Settings', function() {
 
   it('should have a `runtime` property', function() {
     engines.each(function(engine) {
-      assert.equal(typeof engine.runtime, 'function');
-      var js = engine.runtime();
-      assert.equal(typeof js, 'string');
+      assert.equal(typeof engine.runtime, 'string');
     });
   });
 
