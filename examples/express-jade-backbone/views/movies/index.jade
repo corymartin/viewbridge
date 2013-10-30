@@ -2,9 +2,20 @@ extends ../layout
 
 block content
   h1= title
-  h2 Movie Library
 
-  table#movie_table.table
+
+  form#movie_form.pure-form(action='/movies', method='post')
+    fieldset
+      legend Add a Movie
+      input(type='text', name='title', placeholder='Title')
+      input(type='text', name='studio', placeholder='Studio')
+      label
+        input(type='checkbox', name='like')
+        | Liked?
+      button.pure-button.pure-button-primary(type='submit') Add
+
+
+  table#movie_table.pure-table
     thead
       tr
         th Studio
@@ -13,12 +24,13 @@ block content
     tbody
       each movie in movies
         tr(id="movie_#{movie.id}")
-          // Yeah... Jade used to have partials.
-          // I've not committed myself to finding a better solution to this.
+          // Yes, `with` is deprecated and frowned upon.
+          // Jade used to have partials and this works in lieu of them.
           - with (movie) {
             //- View/Template used on both server and client
             include table_row
           - }
+
 
 block scripts
   script(src='/javascripts/vendor/jquery.js')
@@ -28,16 +40,13 @@ block scripts
   script(src='/javascripts/templates.js')
 
   script
+    var app = app || {};
+
     void function() { 'use strict'
-
-      window.app = window.app || {};
-
-
       //
       // Model - Movie
       //
       app.Movie = Backbone.Model.extend();
-
 
       //
       // Collection - Movies
@@ -48,7 +57,6 @@ block scripts
         });
         return new Movies();
       }();
-
 
       //
       // View - Movie Row
@@ -77,7 +85,6 @@ block scripts
           this.model.set('like', ! like);
         }
       });
-
 
       //
       // View - Movie Table
@@ -117,16 +124,48 @@ block scripts
         }
       });
 
+      //
+      // View - Movie Form
+      //
+      app.MovieForm = Backbone.View.extend({
+        el: '#movie_form',
+
+        initialize: function() {
+          this.title  = this.el.querySelector('[name=title]');
+          this.studio = this.el.querySelector('[name=studio]');
+          this.like   = this.el.querySelector('[name=like]');
+        },
+
+        events: {
+          'click [type=submit]': 'add',
+        },
+
+        add: function(evt) {
+          evt.preventDefault();
+          app.movies.add({
+            title:  this.title.value,
+            studio: this.studio.value,
+            like:   this.like.checked
+          });
+          this.el.reset();
+        }
+      });
+
+
+      var bootstrapData = !{JSON.stringify(movies)};
 
       //
       // Initialize the app
       //
-      new app.MovieTable();
-      // Bootstrap the collection with initial data.  Pass a custom
-      // flag to indicate that we only want to initialize the relevant Views
-      // and not render them.
-      var bootstrapData = !{JSON.stringify(movies)};
-      app.movies.reset(bootstrapData, {bootstrap: true});
+      $(function() {
+        new app.MovieTable();
+        new app.MovieForm();
+
+        // Bootstrap the collection with initial data.  Pass a custom
+        // flag to indicate that we only want to initialize the relevant Views
+        // and not render them.
+        app.movies.reset(bootstrapData, {bootstrap: true});
+      });
 
     }();
 
