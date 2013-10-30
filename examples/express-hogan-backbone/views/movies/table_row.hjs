@@ -4,9 +4,9 @@
 <td>{{ studio }}</td>
 <td>
   {{#like}}
-    <button class="btn btn-success like">Yes</button>
+    <button class="pure-button pure-button-success like">Yes</button>
   {{/like}}
   {{^like}}
-    <button class="btn like">No</button>
+    <button class="pure-button like">No</button>
   {{/like}}
 </td>

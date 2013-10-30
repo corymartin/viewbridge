@@ -3,18 +3,26 @@
   <head>
     <meta charset="utf-8" />
     <title>{{ title }}</title>
-    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
-    <style>
-      td { vertical-align: middle !important; }
-      tr > th:nth-child(3),
-      tr > td:nth-child(3) { text-align: center; }
-    </style>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
-  <body class="container">
+  <body>
     <h1>{{ title }}</h1>
-    <h2>Movie Library</h2>
 
-    <table class="table" id="movie_table">
+
+    <form action="/movies" method="post" id="movie_form" class="pure-form">
+      <fieldset>
+      	<legend>Add a Movie</legend>
+        <input type="text" name="title" placeholder="Title" />
+        <input type="text" name="studio" placeholder="Studio" />
+        <label>
+          <input type="checkbox" name="like" /> Liked?
+        <label>
+        <button type="submit" class="pure-button pure-button-primary">Add</button>
+      </fieldset>
+    </form>
+
+
+    <table id="movie_table" class="pure-table">
       <thead>
         <tr>
           <th>Studio</th>
@@ -40,16 +48,13 @@
     <script src='/javascripts/templates.js'></script>
 
     <script>
+      var app = app || {};
+
       void function() { 'use strict'
-
-        window.app = window.app || {};
-
-
         //
         // Model - Movie
         //
         app.Movie = Backbone.Model.extend();
-
 
         //
         // Collection - Movies
@@ -60,7 +65,6 @@
           });
           return new Movies();
         }();
-
 
         //
         // View - Movie Row
@@ -89,7 +93,6 @@
             this.model.set('like', ! like);
           }
         });
-
 
         //
         // View - Movie Table
@@ -129,16 +132,48 @@
           }
         });
 
+        //
+        // View - Movie Form
+        //
+        app.MovieForm = Backbone.View.extend({
+          el: '#movie_form',
+
+          initialize: function() {
+            this.title  = this.el.querySelector('[name=title]');
+            this.studio = this.el.querySelector('[name=studio]');
+            this.like   = this.el.querySelector('[name=like]');
+          },
+
+          events: {
+            'click [type=submit]': 'add',
+          },
+
+          add: function(evt) {
+            evt.preventDefault();
+            app.movies.add({
+              title:  this.title.value,
+              studio: this.studio.value,
+              like:   this.like.checked
+            });
+            this.el.reset();
+          }
+        });
+
+
+        var bootstrapData = {{{data}}};
 
         //
         // Initialize the app
         //
-        new app.MovieTable();
-        // Bootstrap the collection with initial data.  Pass a custom
-        // flag to indicate that we only want to initialize the relevant Views
-        // and not render them.
-        var bootstrapData = {{{data}}};
-        app.movies.reset(bootstrapData, {bootstrap: true});
+        $(function() {
+          new app.MovieTable();
+          new app.MovieForm();
+
+          // Bootstrap the collection with initial data.  Pass a custom
+          // flag to indicate that we only want to initialize the relevant Views
+          // and not render them.
+          app.movies.reset(bootstrapData, {bootstrap: true});
+        });
 
       }();
     </script>

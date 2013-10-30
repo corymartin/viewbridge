@@ -278,7 +278,7 @@ void function(undefined) {
    * Template: viewbridge.movies.table_row()
    */
   viewbridge.movies.table_row = function() {
-  var t = new Hogan.Template( function(c,p,i){var _=this;_.b(i=i||"");_.b("\n" + i);_.b("<td>");_.b(_.v(_.f("title",c,p,0)));_.b("</td>");_.b("\n" + i);_.b("<td>");_.b(_.v(_.f("studio",c,p,0)));_.b("</td>");_.b("\n" + i);_.b("<td>");_.b("\n" + i);if(_.s(_.f("like",c,p,1),c,p,0,75,132,"{{ }}")){_.rs(c,p,function(c,p,_){_.b("    <button class=\"btn btn-success like\">Yes</button>");_.b("\n");});c.pop();}if(!_.s(_.f("like",c,p,1),c,p,1,0,0,"")){_.b("    <button class=\"btn like\">No</button>");_.b("\n");};_.b("</td>");_.b("\n");return _.fl();;} );
+  var t = new Hogan.Template( function(c,p,i){var _=this;_.b(i=i||"");_.b("\n" + i);_.b("<td>");_.b(_.v(_.f("title",c,p,0)));_.b("</td>");_.b("\n" + i);_.b("<td>");_.b(_.v(_.f("studio",c,p,0)));_.b("</td>");_.b("\n" + i);_.b("<td>");_.b("\n" + i);if(_.s(_.f("like",c,p,1),c,p,0,79,152,"{{ }}")){_.rs(c,p,function(c,p,_){_.b("    <button class=\"pure-button pure-button-success like\">Yes</button>");_.b("\n");});c.pop();}if(!_.s(_.f("like",c,p,1),c,p,1,0,0,"")){_.b("    <button class=\"pure-button like\">No</button>");_.b("\n");};_.b("</td>");_.b("\n");return _.fl();;} );
   return function(data, partial) {
     return t.render(data, partial);
   };
