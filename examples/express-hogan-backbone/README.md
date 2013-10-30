@@ -1,4 +1,4 @@
-The view `views/movies/table_row.hjs` is used for server side and is exported for use in the client via Viewbridge.
+The view `views/movies/table_row.hjs` is used server side and is exported for use in the client via Viewbridge.
 
 Most of the action occurs in `views/movies/index.hjs`.
 This template renders on the server and uses the `table_row.hjs` template as a partial.
