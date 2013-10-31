@@ -1,25 +1,24 @@
 Viewbridge
 ==========
 
-Work in progress
------
+Shares views or templates between the server and client, making client side template pre-compilation and/or server side view pre-rendering easy.
 
-Use your serverside views on the client.
-Or just precompile your templates.
+Only server side views/templates specified will be compiled and exported.
 
-Only views/templates specified will be compiled and exported.
+To see in action look at the [examples](https://github.com/corymartin/viewbridge/tree/master/examples).
 
 Engines currently supported:
-[Jade](http://jade-lang.com/),
-[Hogan](http://twitter.github.com/hogan.js/) *(mustache)*,
-[EJS](https://github.com/visionmedia/ejs)
+
+- [Jade](http://jade-lang.com/)
+- [Hogan](http://twitter.github.com/hogan.js/) *(mustache)*
+- [EJS](https://github.com/visionmedia/ejs)
 
 #### Serverside View File
-The attribute comment tells Viewbridge to precompile a clientside function for this view.
+The attribute comment, `//@viewbridge`, signifies that Viewbridge should precompile a clientside function for this view.
 `views/user/status.jade`
 
 ```jade
-//@ viewbridge
+//@viewbridge
 
 h1= title
 ```
@@ -139,20 +138,20 @@ in either the CLI app or the exposed function.
 
 ### Jade
 ```
-//@ viewbridge
-//-@ viewbridge
+//@viewbridge
+//-@viewbridge
 ```
 
 ### Hogan (Mustache)
 ```
-{{!@ viewbridge }}
+{{!@viewbridge }}
 ```
 
 ### EJS
 ```
-<%/*@ viewbridge */%>
+<%/*@viewbridge */%>
 <%
-  //@ viewbridge
+  //@viewbridge
 %>
 ```
 
@@ -193,7 +192,7 @@ $ viewbridge --dir ~/myapp/views \
 ```
 
 Any Hogan templates under `~/myapp/views` with an extension of `.hjs` and an
-attribute comment `{{!@ viewbridge }}` will have a precompiled function made
+attribute comment `{{! @viewbridge }}` will have a precompiled function made
 for it in `~/myapp/public/javascripts/mytemplates.js`.
 The output file will be updated as changes are made under the views directory.
 
