@@ -1,4 +1,4 @@
-{{!@ viewbridge }}
+{{! @viewbridge }}
 
 <td>{{ title }}</td>
 <td>{{ studio }}</td>
