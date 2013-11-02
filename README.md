@@ -108,7 +108,8 @@ var viewbridge = require('viewbridge');
 - `dir`:       Path to root of views/templates directory. Default is current
                working directory.
 - `views`:     Array of views to compile functions for.
-               This option can be used instead of or in addtion to Viewbridge attribute comments.
+               This option can be used instead of Viewbridge attribute comments.
+               Only views specified by this option will be exported.
 - `allviews`:  Compiles all views regardless of attribute comments or `views` option.
 - `output`:    JS file to create.
 - `namespace`: Clientside namespace. Default is `viewbridge`. No limit on how deep it
@@ -246,6 +247,11 @@ Notes
 
 Change Log
 ----------
+
+0.4.2
+
+- Refactoring and code improvement.
+- If `views` option is specified, only those views will be pre-compiled and exported despite any `@viewbridge` comments.
 
 0.4.1
 

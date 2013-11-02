@@ -1,6 +1,6 @@
 {
   "name": "viewbridge",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Shares views or templates between the server and client, making client side template pre-compilation and/or server side view pre-rendering easy.",
   "readmeFilename": "README.md",
   "license": "MIT",
